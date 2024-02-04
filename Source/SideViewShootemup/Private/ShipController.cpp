@@ -51,6 +51,7 @@ void AShipController::OnTrustVectorTriggered(const FInputActionInstance& thrustV
     AShipPawn* ship = GetPawn<AShipPawn>();
     if (IsValid(ship))
     {
-        ship->SetThrustVector(thrustVector);
+        ship->SetThrustVector({ thrustVector.X, 0.0f, thrustVector.Y });
+        ship->SetThrust(1.0f);
     }
 }

@@ -15,8 +15,14 @@ public:
     // Sets default values for this pawn's properties
     AShipPawn();
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     UStaticMeshComponent * MainBody;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    USceneComponent * EngineAxis;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    float ThrustUnit = 5000000.0f;
 
 protected:
     // Called when the game starts or when spawned
@@ -29,9 +35,9 @@ public:
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-    void SetThrustVector(const FVector2D& vector) { mThrustVector = vector; }
+    void SetThrustVector(const FVector& vector) { mThrustVector = vector; }
     void SetThrust(float thrust) { mThrust = thrust; }
 private:
-    FVector2D mThrustVector = FVector2D::Zero();
-    float mThrust = 5000001.0f;
+    FVector mThrustVector = FVector::UnitZ();
+    float mThrust = 0.0f;
 };

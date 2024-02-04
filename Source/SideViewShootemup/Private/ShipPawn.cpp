@@ -1,36 +1,41 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ShipPawn.h"
+#include "SideViewShootemup/SideViewShootemup.h"
 
-// Sets default values
 AShipPawn::AShipPawn()
 {
-    // Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
     MainBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBody"));
+    check(MainBody);
+    RootComponent = MainBody;
+    EngineAxis = CreateDefaultSubobject<USceneComponent>(TEXT("EngineAxis"));
+    check(EngineAxis);
+    EngineAxis->SetupAttachment(MainBody);
 }
 
-// Called when the game starts or when spawned
 void AShipPawn::BeginPlay()
 {
     Super::BeginPlay();
 }
 
-// Called every frame
 void AShipPawn::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if (IsValid(MainBody))
+    if (mThrust != 0.0f)
     {
-        FVector force = { mThrustVector.X, 0.0f, mThrustVector.Y };
-        MainBody->AddForce(force * mThrust);
+        check(IsValid(MainBody));
+        MainBody->AddForce(mThrustVector * mThrust * ThrustUnit);
     }
 
-    mThrustVector = FVector2D::Zero();
+    check(IsValid(EngineAxis));
+    EngineAxis->SetRelativeRotation((-mThrustVector).ToOrientationQuat());
+
+    mThrust = 0.0f;
+    mThrustVector = FVector::UnitZ();
 }
 
-// Called to bind functionality to input
 void AShipPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
