@@ -33,5 +33,5 @@ public:
     void SetThrust(float thrust) { mThrust = thrust; }
 private:
     FVector2D mThrustVector = FVector2D::Zero();
-    float mThrust = 1000000.0f;
+    float mThrust = 5000001.0f;
 };
