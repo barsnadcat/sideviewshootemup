@@ -19,10 +19,16 @@ public:
     UStaticMeshComponent * MainBody;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    USceneComponent * EngineHandle;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     USceneComponent * EngineAxis;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     float ThrustUnit = 5000000.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    double EngineTraking = 3.0f;
 
 protected:
     // Called when the game starts or when spawned
@@ -41,3 +47,5 @@ private:
     FVector mThrustVector = FVector::UnitZ();
     float mThrust = 0.0f;
 };
+
+double CalcNewPitch(const FVector& current, const FVector& requested, double maxDelta);

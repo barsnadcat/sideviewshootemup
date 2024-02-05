@@ -47,7 +47,7 @@ void AShipController::OnTrustTriggered()
 void AShipController::OnTrustVectorTriggered(const FInputActionInstance& thrustVectorAction)
 {
     FVector2D thrustVector = thrustVectorAction.GetValue().Get<FVector2D>();
-    UE_LOG(Game, Display, TEXT("OnTrustVectorTriggered %s"), *thrustVector.ToString());
+    //UE_LOG(Game, Display, TEXT("OnTrustVectorTriggered %s"), *thrustVector.ToString());
     AShipPawn* ship = GetPawn<AShipPawn>();
     if (IsValid(ship))
     {
