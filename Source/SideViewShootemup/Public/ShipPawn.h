@@ -6,7 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "ShipPawn.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FGenerateThrust, UPrimitiveComponent*, const FVector &, double);
+DECLARE_MULTICAST_DELEGATE_FourParams(FGenerateThrust, UPrimitiveComponent*, const FVector &, double, float);
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPawn : public APawn

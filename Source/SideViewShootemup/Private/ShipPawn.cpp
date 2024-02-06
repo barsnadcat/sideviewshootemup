@@ -20,7 +20,7 @@ void AShipPawn::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    GenerateThrust.Broadcast(MainBody, mThrustVector, mThrust);
+    GenerateThrust.Broadcast(MainBody, mThrustVector, mThrust, DeltaTime);
 
     mThrust = 0.0f;
     mThrustVector = FVector::UnitZ();

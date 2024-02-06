@@ -14,11 +14,11 @@ UShipEngine::UShipEngine()
     }
 }
 
-void UShipEngine::OnGenerateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust)
+void UShipEngine::OnGenerateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust, float deltaTime)
 {
     check(IsValid(primitive));
 
-    double newPitch = CalcNewPitch(GetComponentRotation().Vector(), vector, EngineTraking);
+    double newPitch = CalcNewPitch(GetComponentRotation().Vector(), vector, EngineTraking * deltaTime);
     SetWorldRotation(FRotator(newPitch, 0.0f, 0.0f).Quaternion());
 
     if (thrust != 0.0f)
