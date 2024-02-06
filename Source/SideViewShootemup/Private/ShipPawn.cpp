@@ -33,7 +33,7 @@ void AShipPawn::Tick(float DeltaTime)
     if (mThrust != 0.0f)
     {
         check(IsValid(MainBody));
-        MainBody->AddForce(mThrustVector * mThrust * ThrustUnit);
+        MainBody->AddForce(EngineAxis->GetComponentRotation().Vector() * mThrust * ThrustUnit);
     }
 
     mThrust = 0.0f;
