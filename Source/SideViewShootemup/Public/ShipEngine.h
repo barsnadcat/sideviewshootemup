@@ -17,7 +17,7 @@ public:
     void OnGenerateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust);
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    double MaxThrust = 5000000.0f;
+    double MaxThrust = 2000000.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     double EngineTraking = 5.0f;
