@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "ShipPawn.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FGenerateThrust, UPrimitiveComponent*, const FVector &, double);
+
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPawn : public APawn
 {
@@ -18,18 +20,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     UStaticMeshComponent * MainBody;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    USceneComponent * EngineHandle;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    USceneComponent * EngineAxis;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    float ThrustUnit = 5000000.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    double EngineTraking = 3.0f;
-
+    FGenerateThrust GenerateThrust;
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -48,4 +39,3 @@ private:
     float mThrust = 0.0f;
 };
 
-double CalcNewPitch(const FVector& current, const FVector& requested, double maxDelta);
