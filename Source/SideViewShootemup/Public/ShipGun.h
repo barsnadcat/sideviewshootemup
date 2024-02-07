@@ -15,9 +15,16 @@ public:
     UShipGun();
 
     void OnAimAt(const FVector& target, float deltaTime);
+    void OnShoot();
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     double GunTraking = 180.0f;
+
+    UPROPERTY(EditDefaultsOnly, Category = Projectile)
+    TSubclassOf<class AActor> ProjectileClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    USceneComponent * GunMuzzle;
 
 protected:
     virtual void BeginPlay() override;

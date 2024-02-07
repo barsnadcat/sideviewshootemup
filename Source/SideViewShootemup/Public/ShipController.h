@@ -27,6 +27,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputAction * ThrustVectorAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction * ShootAction;
+
     virtual void SetupInputComponent() override;
     virtual void BeginPlay() override;
     virtual void PlayerTick(float DeltaTime) override;
@@ -35,4 +38,5 @@ public:
 
     void OnTrustTriggered();
     void OnTrustVectorTriggered(const FInputActionInstance& thrustVector);
+    void OnShootTriggered();
 };

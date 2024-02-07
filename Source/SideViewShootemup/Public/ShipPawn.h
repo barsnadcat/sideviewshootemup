@@ -8,6 +8,7 @@
 
 DECLARE_MULTICAST_DELEGATE_FourParams(FGenerateThrust, UPrimitiveComponent*, const FVector &, double, float);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FAimAt, const FVector &, float);
+DECLARE_MULTICAST_DELEGATE(FShoot);
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPawn : public APawn
@@ -23,6 +24,7 @@ public:
 
     FGenerateThrust GenerateThrust;
     FAimAt AimAt;
+    FShoot Shoot;
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;

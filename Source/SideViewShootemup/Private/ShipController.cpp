@@ -14,6 +14,7 @@ void AShipController::SetupInputComponent()
     {
         inputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShipController::OnTrustTriggered);
         inputComponent->BindAction(ThrustVectorAction, ETriggerEvent::Triggered, this, &AShipController::OnTrustVectorTriggered);
+        inputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AShipController::OnShootTriggered);
     }
 }
 
@@ -91,5 +92,13 @@ void AShipController::OnTrustVectorTriggered(const FInputActionInstance& thrustV
     {
         ship->SetThrustVector({ thrustVector.X, 0.0f, thrustVector.Y });
         ship->SetThrust(1.0f);
+    }
+}
+
+void AShipController::OnShootTriggered()
+{
+    if (AShipPawn* ship = GetPawn<AShipPawn>())
+    {
+        ship->Shoot.Broadcast();
     }
 }
