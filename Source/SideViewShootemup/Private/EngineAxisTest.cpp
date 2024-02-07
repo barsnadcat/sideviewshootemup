@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ShipEngine.h"
+#include "ShipPawn.h"
 #include "Tests/TestHarnessAdapter.h"
 
 TEST_CASE_NAMED(FEngineAxisTest, "Game::EngineAxis", "[Game][EngineAxis]")

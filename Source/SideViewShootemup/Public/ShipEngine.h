@@ -23,4 +23,3 @@ public:
     double EngineTraking = 180.0f;
 };
 
-double CalcNewPitch(const FVector& current, const FVector& requested, double maxDelta);

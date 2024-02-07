@@ -21,13 +21,16 @@ void AShipPawn::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     GenerateThrust.Broadcast(MainBody, mThrustVector, mThrust, DeltaTime);
+    AimAt.Broadcast(mAimPosition, DeltaTime);
 
     mThrust = 0.0f;
     mThrustVector = FVector::UnitZ();
 }
 
-void AShipPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+double CalcNewPitch(const FVector& current, const FVector& requested, double maxDelta)
 {
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
+    double currentPitch = FMath::RadiansToDegrees(FMath::Atan2(current.Z, current.X));
+    double requestedPitch = FMath::RadiansToDegrees(FMath::Atan2(requested.Z, requested.X));
+    double delta = FMath::FindDeltaAngleDegrees(currentPitch, requestedPitch);
+    return FMath::Abs(delta) > maxDelta ? currentPitch + copysign(maxDelta, delta) : requestedPitch;
 }
-

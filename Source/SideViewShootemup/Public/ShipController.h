@@ -29,6 +29,9 @@ public:
 
     virtual void SetupInputComponent() override;
     virtual void BeginPlay() override;
+    virtual void PlayerTick(float DeltaTime) override;
+
+    FVector GetMouseWorldPosition(double planeY);
 
     void OnTrustTriggered();
     void OnTrustVectorTriggered(const FInputActionInstance& thrustVector);

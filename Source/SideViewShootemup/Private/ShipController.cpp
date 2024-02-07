@@ -10,33 +10,72 @@ void AShipController::SetupInputComponent()
 {
     Super::SetupInputComponent();
 
-    // Set up action bindings
     if (UEnhancedInputComponent* inputComponent = Cast<UEnhancedInputComponent>(InputComponent))
     {
-        // Setup mouse input events
         inputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShipController::OnTrustTriggered);
         inputComponent->BindAction(ThrustVectorAction, ETriggerEvent::Triggered, this, &AShipController::OnTrustVectorTriggered);
-
-        // Setup touch input events
-        //EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Started, this, &AMyProject4PlayerController::OnInputStarted);
-        //EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Triggered, this, &AMyProject4PlayerController::OnTouchTriggered);
-        //EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Completed, this, &AMyProject4PlayerController::OnTouchReleased);
-        //EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &AMyProject4PlayerController::OnTouchReleased);
-    }
-    //else
-    {
-        //UE_LOG(LogTemplateCharacter, Error, TEXT(" '%s' Failed to find an Enhanced Input Component !This template is built to use the Enhanced Input system.If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
     }
 }
 
 void AShipController::BeginPlay()
 {
     Super::BeginPlay();
-    //Add Input Mapping Context
     if (UEnhancedInputLocalPlayerSubsystem* inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
     {
         inputSubsystem->AddMappingContext(ShipInputMappingContext, 0);
     }
+}
+
+void AShipController::PlayerTick(float DeltaTime)
+{
+    Super::PlayerTick(DeltaTime);
+
+    if (AShipPawn* ship = GetPawn<AShipPawn>())
+    {
+        FVector mouse = GetMouseWorldPosition(ship->GetActorLocation().Y);
+        ship->SetAimPosition(mouse);
+        DrawDebugPoint(GetWorld(), mouse, 2.0f, FColor::Red);
+    }
+}
+
+FVector AShipController::GetMouseWorldPosition(double planeY)
+{
+    ULocalPlayer* localPlayer = GetLocalPlayer();
+    if (!IsValid(localPlayer) || !IsValid(localPlayer->ViewportClient))
+    {
+        return FVector::Zero();
+    }
+
+    FVector2D mouseScreenPosition = FVector2D::Zero();
+    if (!localPlayer->ViewportClient->GetMousePosition(mouseScreenPosition))
+    {
+        return FVector::Zero();
+    }
+
+    FVector deprojectLocation = FVector::Zero();
+    FVector deprojectDirection = FVector::Zero();
+    if (!DeprojectScreenPositionToWorld(mouseScreenPosition.X, mouseScreenPosition.Y, deprojectLocation, deprojectDirection))
+    {
+        return FVector::Zero();
+    }
+
+    FVector worldMousePosition = FVector::Zero();
+    worldMousePosition.Y = planeY;
+    double distanceToPlaneY = planeY - deprojectLocation.Y;
+
+    worldMousePosition.X = deprojectLocation.X;
+    if (!FMath::IsNearlyZero(deprojectDirection.X))
+    {
+        worldMousePosition.X = deprojectLocation.X + (distanceToPlaneY * deprojectDirection.X) / deprojectDirection.Y;
+    }
+
+    worldMousePosition.Z = deprojectLocation.Z;
+    if (!FMath::IsNearlyZero(deprojectDirection.Z))
+    {
+        worldMousePosition.Z = deprojectLocation.Z + (distanceToPlaneY * deprojectDirection.Z) / deprojectDirection.Y;
+    }
+
+    return worldMousePosition;
 }
 
 void AShipController::OnTrustTriggered()
@@ -48,8 +87,7 @@ void AShipController::OnTrustVectorTriggered(const FInputActionInstance& thrustV
 {
     FVector2D thrustVector = thrustVectorAction.GetValue().Get<FVector2D>();
     //UE_LOG(Game, Display, TEXT("OnTrustVectorTriggered %s"), *thrustVector.ToString());
-    AShipPawn* ship = GetPawn<AShipPawn>();
-    if (IsValid(ship))
+    if (AShipPawn* ship = GetPawn<AShipPawn>())
     {
         ship->SetThrustVector({ thrustVector.X, 0.0f, thrustVector.Y });
         ship->SetThrust(1.0f);
