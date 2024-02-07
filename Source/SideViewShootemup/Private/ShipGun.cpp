@@ -2,6 +2,7 @@
 
 #include "ShipGun.h"
 #include "ShipPawn.h"
+#include "CalcNewPitch.h"
 
 UShipGun::UShipGun()
 {

@@ -2,6 +2,7 @@
 
 #include "ShipEngine.h"
 #include "ShipPawn.h"
+#include "CalcNewPitch.h"
 
 // Sets default values for this component's properties
 UShipEngine::UShipEngine()

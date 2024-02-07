@@ -39,5 +39,3 @@ private:
     FVector mAimPosition = FVector::UnitX();
     float mThrust = 0.0f;
 };
-
-double CalcNewPitch(const FVector& current, const FVector& requested, double maxDelta);
