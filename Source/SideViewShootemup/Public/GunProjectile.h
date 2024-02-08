@@ -4,23 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+
+#include "Runtime/Engine/Classes/Components/SphereComponent.h"
 #include "GunProjectile.generated.h"
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AGunProjectile : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AGunProjectile();
+    GENERATED_BODY()
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+public:
+    // Sets default values for this actor's properties
+    AGunProjectile();
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+    /** Sphere collision component */
+    UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+    USphereComponent * CollisionComp;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+    UProjectileMovementComponent * ProjectileMovement;
+
+    UFUNCTION()
+    void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };
