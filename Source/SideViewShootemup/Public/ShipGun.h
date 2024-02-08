@@ -20,15 +20,20 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     double GunTraking = 180.0f;
 
-    UPROPERTY(EditDefaultsOnly, Category = Projectile)
+    UPROPERTY(EditDefaultsOnly, Category = Game)
     TSubclassOf<class AActor> ProjectileClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     USceneComponent * GunMuzzle;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    double RPM = 180.f;
 
 protected:
     virtual void BeginPlay() override;
 
 public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+private:
+    double mLastShootSeconds = 0.0f;
 };

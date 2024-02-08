@@ -34,12 +34,16 @@ void UShipGun::OnShoot()
     {
         return;
     }
-    UWorld* World = GetValid(GetWorld());
-    if (!World)
+    UWorld* world = GetValid(GetWorld());
+    if (!world)
     {
         return;
     }
     if (!GunMuzzle)
+    {
+        return;
+    }
+    if (world->TimeSeconds - mLastShootSeconds < 60.0f / RPM )
     {
         return;
     }
@@ -48,7 +52,8 @@ void UShipGun::OnShoot()
     ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
     // Spawn the projectile at the muzzle
-    World->SpawnActor(ProjectileClass, &GunMuzzle->GetComponentTransform(), ActorSpawnParams);
+    world->SpawnActor(ProjectileClass, &GunMuzzle->GetComponentTransform(), ActorSpawnParams);
+    mLastShootSeconds = world->TimeSeconds;
 }
 
 void UShipGun::BeginPlay()
