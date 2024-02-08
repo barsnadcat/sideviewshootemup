@@ -24,7 +24,7 @@ public:
     TSubclassOf<class AActor> ProjectileClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    USceneComponent * GunMuzzle;
+    TObjectPtr<USceneComponent> GunMuzzle;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     double RPM = 180.f;

@@ -19,16 +19,16 @@ class SIDEVIEWSHOOTEMUP_API AShipController : public APlayerController
 public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputMappingContext * ShipInputMappingContext;
+    TObjectPtr<UInputMappingContext> ShipInputMappingContext;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction * ThrustAction;
+    TObjectPtr<UInputAction> ThrustAction;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction * ThrustVectorAction;
+    TObjectPtr<UInputAction> ThrustVectorAction;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction * ShootAction;
+    TObjectPtr<UInputAction> ShootAction;
 
     virtual void SetupInputComponent() override;
     virtual void BeginPlay() override;

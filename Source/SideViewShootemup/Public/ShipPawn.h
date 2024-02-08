@@ -20,7 +20,7 @@ public:
     AShipPawn();
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    UStaticMeshComponent * MainBody;
+    TObjectPtr<UStaticMeshComponent> MainBody;
 
     FGenerateThrust GenerateThrust;
     FAimAt AimAt;

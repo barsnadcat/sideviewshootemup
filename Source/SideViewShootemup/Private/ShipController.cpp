@@ -42,7 +42,7 @@ void AShipController::PlayerTick(float DeltaTime)
 FVector AShipController::GetMouseWorldPosition(double planeY)
 {
     ULocalPlayer* localPlayer = GetLocalPlayer();
-    if (!IsValid(localPlayer) || !IsValid(localPlayer->ViewportClient))
+    if (!localPlayer || !localPlayer->ViewportClient)
     {
         return FVector::Zero();
     }

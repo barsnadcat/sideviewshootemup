@@ -34,7 +34,7 @@ void UShipGun::OnShoot()
     {
         return;
     }
-    UWorld* world = GetValid(GetWorld());
+    UWorld* world = GetWorld();
     if (!world)
     {
         return;
@@ -43,7 +43,7 @@ void UShipGun::OnShoot()
     {
         return;
     }
-    if (world->TimeSeconds - mLastShootSeconds < 60.0f / RPM )
+    if (world->TimeSeconds - mLastShootSeconds < 60.0f / RPM)
     {
         return;
     }

@@ -7,7 +7,6 @@ AShipPawn::AShipPawn()
 {
     PrimaryActorTick.bCanEverTick = true;
     MainBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBody"));
-    check(MainBody);
     RootComponent = MainBody;
 }
 
