@@ -31,8 +31,8 @@ public:
     TObjectPtr<UInputAction> ShootAction;
 
     virtual void SetupInputComponent() override;
-    virtual void BeginPlay() override;
     virtual void PlayerTick(float DeltaTime) override;
+    virtual void SetPawn(APawn* InPawn) override;
 
     FVector GetMouseWorldPosition(double planeY);
 

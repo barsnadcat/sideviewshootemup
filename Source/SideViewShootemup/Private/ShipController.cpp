@@ -18,15 +18,6 @@ void AShipController::SetupInputComponent()
     }
 }
 
-void AShipController::BeginPlay()
-{
-    Super::BeginPlay();
-    if (UEnhancedInputLocalPlayerSubsystem* inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-    {
-        inputSubsystem->AddMappingContext(ShipInputMappingContext, 0);
-    }
-}
-
 void AShipController::PlayerTick(float DeltaTime)
 {
     Super::PlayerTick(DeltaTime);
@@ -100,5 +91,18 @@ void AShipController::OnShootTriggered()
     if (AShipPawn* ship = GetPawn<AShipPawn>())
     {
         ship->Shoot.Broadcast();
+    }
+}
+
+void AShipController::SetPawn(APawn* InPawn)
+{
+    Super::SetPawn(InPawn);
+
+    if (UEnhancedInputLocalPlayerSubsystem* inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+    {
+        if (!inputSubsystem->HasMappingContext(ShipInputMappingContext))
+        {
+            inputSubsystem->AddMappingContext(ShipInputMappingContext, 0);
+        }
     }
 }
