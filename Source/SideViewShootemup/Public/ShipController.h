@@ -12,7 +12,7 @@
  *
  */
 UCLASS()
-class SIDEVIEWSHOOTEMUP_API AShipController : public APlayerController
+class SIDEVIEWSHOOTEMUP_API AMyPlayerController : public APlayerController
 {
     GENERATED_BODY()
 

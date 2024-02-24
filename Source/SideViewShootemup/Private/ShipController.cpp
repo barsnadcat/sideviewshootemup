@@ -7,19 +7,19 @@
 #include "ShipPawn.h"
 #include "MyGameMode.h"
 
-void AShipController::SetupInputComponent()
+void AMyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
 
     if (UEnhancedInputComponent* inputComponent = Cast<UEnhancedInputComponent>(InputComponent))
     {
-        inputComponent->BindAction(ThrustVectorAction, ETriggerEvent::Triggered, this, &AShipController::OnTrustVectorTriggered);
-        inputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AShipController::OnShootTriggered);
-        inputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AShipController::OnInteractTriggered);
+        inputComponent->BindAction(ThrustVectorAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnTrustVectorTriggered);
+        inputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnShootTriggered);
+        inputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnInteractTriggered);
     }
 }
 
-void AShipController::PlayerTick(float DeltaTime)
+void AMyPlayerController::PlayerTick(float DeltaTime)
 {
     Super::PlayerTick(DeltaTime);
 
@@ -31,7 +31,7 @@ void AShipController::PlayerTick(float DeltaTime)
     }
 }
 
-FVector AShipController::GetMouseWorldPosition(double planeY)
+FVector AMyPlayerController::GetMouseWorldPosition(double planeY)
 {
     ULocalPlayer* localPlayer = GetLocalPlayer();
     if (!localPlayer || !localPlayer->ViewportClient)
@@ -71,7 +71,7 @@ FVector AShipController::GetMouseWorldPosition(double planeY)
     return worldMousePosition;
 }
 
-void AShipController::OnTrustVectorTriggered(const FInputActionInstance& thrustVectorAction)
+void AMyPlayerController::OnTrustVectorTriggered(const FInputActionInstance& thrustVectorAction)
 {
     FVector2D thrustVector = thrustVectorAction.GetValue().Get<FVector2D>();
     //UE_LOG(Game, Display, TEXT("OnTrustVectorTriggered %s"), *thrustVector.ToString());
@@ -82,7 +82,7 @@ void AShipController::OnTrustVectorTriggered(const FInputActionInstance& thrustV
     }
 }
 
-void AShipController::OnShootTriggered()
+void AMyPlayerController::OnShootTriggered()
 {
     if (AShipPawn* ship = GetPawn<AShipPawn>())
     {
@@ -90,7 +90,7 @@ void AShipController::OnShootTriggered()
     }
 }
 
-void AShipController::OnInteractTriggered()
+void AMyPlayerController::OnInteractTriggered()
 {
     if (AMyGameMode* const gameMode = GetWorld()->GetAuthGameMode<AMyGameMode>())
     {
@@ -101,7 +101,7 @@ void AShipController::OnInteractTriggered()
     }
 }
 
-void AShipController::SetPawn(APawn* inPawn)
+void AMyPlayerController::SetPawn(APawn* inPawn)
 {
     Super::SetPawn(inPawn);
     UEnhancedInputLocalPlayerSubsystem* inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
