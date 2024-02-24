@@ -16,10 +16,10 @@ class SIDEVIEWSHOOTEMUP_API UEnemySpawner : public UTickableWorldSubsystem
 {
     GENERATED_BODY()
 public:
+    UPROPERTY()
+    TObjectPtr<AShipAIController> ShipAIController;
+
     virtual void OnWorldBeginPlay(UWorld& InWorld);
 
     virtual TStatId GetStatId() const override;
-
-    UPROPERTY()
-    TObjectPtr<AShipAIController> ShipAIController;
 };

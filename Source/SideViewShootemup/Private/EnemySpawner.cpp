@@ -2,6 +2,7 @@
 
 #include "EnemySpawner.h"
 #include "ShipPawn.h"
+#include "MyGameMode.h"
 #include "GameFramework/GameModeBase.h"
 
 void UEnemySpawner::OnWorldBeginPlay(UWorld& InWorld)
@@ -12,10 +13,10 @@ void UEnemySpawner::OnWorldBeginPlay(UWorld& InWorld)
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     SpawnInfo.ObjectFlags |= RF_Transient;
     ShipAIController = InWorld.SpawnActor<AShipAIController>(AShipAIController::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnInfo);
-    AGameModeBase* const gameMode = InWorld.GetAuthGameMode();
+    AMyGameMode* const gameMode = InWorld.GetAuthGameMode<AMyGameMode>();
     if (gameMode)
     {
-        AShipPawn* ship = InWorld.SpawnActor<AShipPawn>(gameMode->DefaultPawnClass, { 300, 0, 200 }, FRotator::ZeroRotator, SpawnInfo);
+        AShipPawn* ship = InWorld.SpawnActor<AShipPawn>(gameMode->ShipPawnClass, { 300, 0, 200 }, FRotator::ZeroRotator, SpawnInfo);
         ShipAIController->Possess(ship);
     }
 }
