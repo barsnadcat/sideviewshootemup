@@ -13,8 +13,7 @@ void UEnemySpawner::OnWorldBeginPlay(UWorld& InWorld)
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     SpawnInfo.ObjectFlags |= RF_Transient;
     ShipAIController = InWorld.SpawnActor<AShipAIController>(AShipAIController::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnInfo);
-    AMyGameMode* const gameMode = InWorld.GetAuthGameMode<AMyGameMode>();
-    if (gameMode)
+    if (AMyGameMode* const gameMode = InWorld.GetAuthGameMode<AMyGameMode>())
     {
         AShipPawn* ship = InWorld.SpawnActor<AShipPawn>(gameMode->ShipPawnClass, { 300, 0, 200 }, FRotator::ZeroRotator, SpawnInfo);
         ShipAIController->Possess(ship);

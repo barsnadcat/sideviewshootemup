@@ -5,6 +5,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "ShipPawn.h"
+#include "MyGameMode.h"
 
 void AShipController::SetupInputComponent()
 {
@@ -12,9 +13,9 @@ void AShipController::SetupInputComponent()
 
     if (UEnhancedInputComponent* inputComponent = Cast<UEnhancedInputComponent>(InputComponent))
     {
-        inputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShipController::OnTrustTriggered);
         inputComponent->BindAction(ThrustVectorAction, ETriggerEvent::Triggered, this, &AShipController::OnTrustVectorTriggered);
         inputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AShipController::OnShootTriggered);
+        inputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AShipController::OnInteractTriggered);
     }
 }
 
@@ -70,11 +71,6 @@ FVector AShipController::GetMouseWorldPosition(double planeY)
     return worldMousePosition;
 }
 
-void AShipController::OnTrustTriggered()
-{
-    UE_LOG(Game, Display, TEXT("OnTrustTriggered"));
-}
-
 void AShipController::OnTrustVectorTriggered(const FInputActionInstance& thrustVectorAction)
 {
     FVector2D thrustVector = thrustVectorAction.GetValue().Get<FVector2D>();
@@ -94,15 +90,40 @@ void AShipController::OnShootTriggered()
     }
 }
 
-void AShipController::SetPawn(APawn* InPawn)
+void AShipController::OnInteractTriggered()
 {
-    Super::SetPawn(InPawn);
-
-    if (UEnhancedInputLocalPlayerSubsystem* inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+    if (AMyGameMode* const gameMode = GetWorld()->GetAuthGameMode<AMyGameMode>())
     {
+        if (gameMode->ShipPawn)
+        {
+            Possess(gameMode->ShipPawn);
+        }
+    }
+}
+
+void AShipController::SetPawn(APawn* inPawn)
+{
+    Super::SetPawn(inPawn);
+    UEnhancedInputLocalPlayerSubsystem* inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+    if (!inputSubsystem || !inPawn)
+    {
+        return;
+    }
+
+    if (inPawn->IsA<AShipPawn>())
+    {
+        inputSubsystem->RemoveMappingContext(CharacterInputMappingContext);
         if (!inputSubsystem->HasMappingContext(ShipInputMappingContext))
         {
             inputSubsystem->AddMappingContext(ShipInputMappingContext, 0);
+        }
+    }
+    else
+    {
+        inputSubsystem->RemoveMappingContext(ShipInputMappingContext);
+        if (!inputSubsystem->HasMappingContext(CharacterInputMappingContext))
+        {
+            inputSubsystem->AddMappingContext(CharacterInputMappingContext, 0);
         }
     }
 }

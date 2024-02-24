@@ -22,7 +22,7 @@ public:
     TObjectPtr<UInputMappingContext> ShipInputMappingContext;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    TObjectPtr<UInputAction> ThrustAction;
+    TObjectPtr<UInputMappingContext> CharacterInputMappingContext;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     TObjectPtr<UInputAction> ThrustVectorAction;
@@ -30,13 +30,16 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     TObjectPtr<UInputAction> ShootAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    TObjectPtr<UInputAction> InteractAction;
+
     virtual void SetupInputComponent() override;
     virtual void PlayerTick(float DeltaTime) override;
     virtual void SetPawn(APawn* InPawn) override;
 
     FVector GetMouseWorldPosition(double planeY);
 
-    void OnTrustTriggered();
     void OnTrustVectorTriggered(const FInputActionInstance& thrustVector);
     void OnShootTriggered();
+    void OnInteractTriggered();
 };
