@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
-#include "ShipController.generated.h"
+#include "MyPlayerController.generated.h"
 
 /**
  *
