@@ -16,6 +16,7 @@ void AMyPlayerController::SetupInputComponent()
         inputComponent->BindAction(ThrustVectorAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnTrustVectorTriggered);
         inputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnShootTriggered);
         inputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnInteractTriggered);
+        inputComponent->BindAction(CancelInteractionAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnCancelInteractionTriggered);
     }
 }
 
@@ -101,6 +102,11 @@ void AMyPlayerController::OnInteractTriggered()
     }
 }
 
+void AMyPlayerController::OnCancelInteractionTriggered()
+{
+    Possess(DefaultPawn);
+}
+
 void AMyPlayerController::SetPawn(APawn* inPawn)
 {
     Super::SetPawn(inPawn);
@@ -110,7 +116,7 @@ void AMyPlayerController::SetPawn(APawn* inPawn)
         return;
     }
 
-    if (inPawn->IsA<AShipPawn>())
+    if (inPawn != DefaultPawn)
     {
         inputSubsystem->RemoveMappingContext(CharacterInputMappingContext);
         if (!inputSubsystem->HasMappingContext(ShipInputMappingContext))
@@ -126,4 +132,10 @@ void AMyPlayerController::SetPawn(APawn* inPawn)
             inputSubsystem->AddMappingContext(CharacterInputMappingContext, 0);
         }
     }
+}
+
+void AMyPlayerController::SetDefaultPawn(APawn* defaultPawn)
+{
+    check(defaultPawn);
+    DefaultPawn = defaultPawn;
 }

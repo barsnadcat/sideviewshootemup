@@ -20,5 +20,7 @@ public:
     UPROPERTY()
     TObjectPtr<AShipPawn> ShipPawn;
 
+    virtual APawn* SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform) override;
+
     virtual void BeginPlay() override;
 };
