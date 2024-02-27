@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "ShipPawn.h"
+#include "ShipAIController.h"
 #include "MyGameMode.generated.h"
 
 /**
@@ -17,6 +18,8 @@ class SIDEVIEWSHOOTEMUP_API AMyGameMode : public AGameModeBase
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
     TSubclassOf<APawn> ShipPawnClass;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
+    TSubclassOf<AShipAIController> ShipAIControllerClass;
     UPROPERTY()
     TObjectPtr<AShipPawn> ShipPawn;
 

@@ -10,7 +10,12 @@
  *
  */
 UCLASS()
-class SIDEVIEWSHOOTEMUP_API AShipAIController : public AController
+class SIDEVIEWSHOOTEMUP_API AShipAIController : public AAIController
 {
     GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, Category = AI)
+    TObjectPtr<UBehaviorTree> BehaviorTree;
+
+    virtual void BeginPlay() override;
 };
