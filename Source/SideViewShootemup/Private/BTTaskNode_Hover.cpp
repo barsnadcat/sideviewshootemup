@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTaskNode_Hover.h"
+#include "AIController.h"
+#include "ShipPawn.h"
 #include "SideViewShootemup\SideViewShootemup.h"
 
 UBTTaskNode_Hover::UBTTaskNode_Hover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -16,5 +18,14 @@ EBTNodeResult::Type UBTTaskNode_Hover::ExecuteTask(UBehaviorTreeComponent& Owner
 
 void UBTTaskNode_Hover::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-    UE_LOG(Game, Display, TEXT("TickTask"));
+    AAIController* controller = OwnerComp.GetAIOwner();
+    if (controller)
+    {
+        AShipPawn* ship = controller->GetPawn<AShipPawn>();
+        if (ship)
+        {
+            ship->SetThrustVector({ 0.0f, 0.0f, 1.f });
+            ship->SetThrust(0.25f);
+        }
+    }
 }
