@@ -12,7 +12,6 @@ UBTTaskNode_Hover::UBTTaskNode_Hover(const FObjectInitializer& ObjectInitializer
 
 EBTNodeResult::Type UBTTaskNode_Hover::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-    UE_LOG(Game, Display, TEXT("ExecuteTask"));
     return EBTNodeResult::InProgress;
 }
 

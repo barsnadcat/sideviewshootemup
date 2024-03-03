@@ -19,4 +19,5 @@ void AMyGameMode::BeginPlay()
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     SpawnInfo.ObjectFlags |= RF_Transient;
     ShipPawn = GetWorld()->SpawnActor<AShipPawn>(ShipPawnClass, { 200, 0, 300 }, FRotator::ZeroRotator, SpawnInfo);
+    ShipAutoPilot = GetWorld()->SpawnActor<AShipAIController>(ShipAIControllerClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnInfo);
 }

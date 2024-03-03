@@ -16,6 +16,5 @@ class SIDEVIEWSHOOTEMUP_API AShipAIController : public AAIController
 public:
     UPROPERTY(EditAnywhere, Category = AI)
     TObjectPtr<UBehaviorTree> BehaviorTree;
-
-    virtual void BeginPlay() override;
+    virtual void OnPossess(APawn* InPawn) override;
 };
