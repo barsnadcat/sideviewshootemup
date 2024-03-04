@@ -1,5 +1,3 @@
-// Copyright 2023 FragLab Ltd. All rights reserved.
-
 #pragma once
 
 #include "Math/MathFwd.h"

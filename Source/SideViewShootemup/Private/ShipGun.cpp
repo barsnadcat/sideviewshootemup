@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "ShipGun.h"
 #include "ShipPawn.h"
 #include "CalcNewPitch.h"
