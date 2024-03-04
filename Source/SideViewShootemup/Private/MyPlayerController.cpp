@@ -17,6 +17,7 @@ void AMyPlayerController::SetupInputComponent()
         inputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnShootTriggered);
         inputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnInteractTriggered);
         inputComponent->BindAction(CancelInteractionAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnCancelInteractionTriggered);
+        inputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnMoveTriggered);
     }
 }
 
@@ -81,6 +82,12 @@ void AMyPlayerController::OnTrustVectorTriggered(const FInputActionInstance& thr
         ship->SetThrustVector({ thrustVector.X, 0.0f, thrustVector.Y });
         ship->SetThrust(1.0f);
     }
+}
+
+void AMyPlayerController::OnMoveTriggered(const FInputActionInstance& thrustVectorAction)
+{
+    FVector2D vector = thrustVectorAction.GetValue().Get<FVector2D>();
+    UE_LOG(Game, Display, TEXT("OnMoveTriggered %s"), *vector.ToString());
 }
 
 void AMyPlayerController::OnShootTriggered()

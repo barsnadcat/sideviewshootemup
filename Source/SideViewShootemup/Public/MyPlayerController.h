@@ -36,6 +36,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     TObjectPtr<UInputAction> CancelInteractionAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    TObjectPtr<UInputAction> MoveAction;
+
 public:
     virtual void SetupInputComponent() override;
     virtual void PlayerTick(float DeltaTime) override;
@@ -45,6 +48,7 @@ public:
 
 private:
     void OnTrustVectorTriggered(const FInputActionInstance& thrustVector);
+    void OnMoveTriggered(const FInputActionInstance& thrustVectorAction);
     void OnShootTriggered();
     void OnInteractTriggered();
     void OnCancelInteractionTriggered();
