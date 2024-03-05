@@ -85,8 +85,6 @@ void AMyPlayerController::OnTrustVectorTriggered(const FInputActionInstance& thr
 void AMyPlayerController::OnMoveTriggered(const FInputActionInstance& thrustVectorAction)
 {
     FVector2D vector = thrustVectorAction.GetValue().Get<FVector2D>();
-    UE_LOG(Game, Display, TEXT("OnMoveTriggered %s"), *vector.ToString());
-
     if (GetPawn() == DefaultPawn)
     {
         GetPawn()->AddMovementInput(FVector(vector.X, 0.0f, vector.Y));
