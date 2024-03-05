@@ -11,4 +11,8 @@ class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor
 	
 public:	
 	AShipPart();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+	TObjectPtr<UStaticMeshComponent> MainBody;
+
 };

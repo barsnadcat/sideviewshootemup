@@ -4,20 +4,48 @@
 AShipPawn::AShipPawn()
 {
     PrimaryActorTick.bCanEverTick = true;
-    MainBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBody"));
-    RootComponent = MainBody;
+    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 }
 
 void AShipPawn::BeginPlay()
 {
     Super::BeginPlay();
+    UWorld* world = GetWorld();
+    if (!world || !BridgeClass || !SidePartClass || !TopPartClass)
+    {
+        return;
+    }
+
+    FActorSpawnParameters spawnParams;
+    spawnParams.bNoFail = true;
+    Bridge = world->SpawnActor<ABridgeShipPart>(BridgeClass, spawnParams);
+
+    Bridge->SetActorTransform(GetActorTransform());
+    SetActorTransform(FTransform::Identity);
+    RootComponent->AttachToComponent(Bridge->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+
+    FAttachmentTransformRules attachRules(EAttachmentRule::KeepRelative, true);
+    AShipPart* top = world->SpawnActor<AShipPart>(TopPartClass, spawnParams);
+    top->GetRootComponent()->SetRelativeLocation(FVector(0.f, 0.f, 110.0f));
+    top->GetRootComponent()->AttachToComponent(Bridge->GetRootComponent(), attachRules);
+    ShipParts.Add(top);
+
+    AShipPart* left = world->SpawnActor<AShipPart>(SidePartClass, spawnParams);
+    left->GetRootComponent()->SetRelativeLocation(FVector(-110.0f, 0.f, 0.f));
+    left->GetRootComponent()->AttachToComponent(Bridge->GetRootComponent(), attachRules);
+    ShipParts.Add(left);
+
+    AShipPart* right = world->SpawnActor<AShipPart>(SidePartClass, spawnParams);
+    right->GetRootComponent()->SetRelativeLocation(FVector(110.0f, 0.f, 0.f));
+    right->GetRootComponent()->AttachToComponent(Bridge->GetRootComponent(), attachRules);
+    ShipParts.Add(right);
 }
 
 void AShipPawn::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    GenerateThrust.Broadcast(MainBody, mThrustVector, mThrust, DeltaTime);
+    GenerateThrust.Broadcast(Bridge->MainBody, mThrustVector, mThrust, DeltaTime);
     AimAt.Broadcast(mAimPosition, DeltaTime);
 
     mThrust = 0.0f;
