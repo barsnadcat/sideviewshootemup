@@ -2,7 +2,7 @@
 #include "SideViewShootemup/SideViewShootemup.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "ShipPawn.h"
+#include "Ship/ShipPawn.h"
 #include "MyGameMode.h"
 
 void AMyPlayerController::SetupInputComponent()

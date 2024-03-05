@@ -1,5 +1,5 @@
 #include "EnemySpawner.h"
-#include "ShipPawn.h"
+#include "Ship/ShipPawn.h"
 #include "MyGameMode.h"
 #include "GameFramework/GameModeBase.h"
 

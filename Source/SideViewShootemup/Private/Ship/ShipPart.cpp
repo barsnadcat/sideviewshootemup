@@ -1,4 +1,4 @@
-#include "ShipPart.h"
+#include "Ship/ShipPart.h"
 
 AShipPart::AShipPart()
 {

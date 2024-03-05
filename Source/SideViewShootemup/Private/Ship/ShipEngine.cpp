@@ -1,5 +1,5 @@
-#include "ShipEngine.h"
-#include "ShipPawn.h"
+#include "Ship/ShipEngine.h"
+#include "Ship/ShipPawn.h"
 #include "CalcNewPitch.h"
 
 // Sets default values for this component's properties

@@ -1,5 +1,5 @@
-#include "ShipGun.h"
-#include "ShipPawn.h"
+#include "Ship/ShipGun.h"
+#include "Ship/ShipPawn.h"
 #include "CalcNewPitch.h"
 
 UShipGun::UShipGun()

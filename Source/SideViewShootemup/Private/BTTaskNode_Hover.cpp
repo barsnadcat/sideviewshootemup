@@ -1,7 +1,7 @@
 #include "BTTaskNode_Hover.h"
 #include "AIController.h"
-#include "ShipPawn.h"
-#include "SideViewShootemup\SideViewShootemup.h"
+#include "Ship/ShipPawn.h"
+#include "SideViewShootemup/SideViewShootemup.h"
 
 UBTTaskNode_Hover::UBTTaskNode_Hover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

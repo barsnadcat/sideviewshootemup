@@ -1,4 +1,4 @@
-#include "ShipPawn.h"
+#include "Ship/ShipPawn.h"
 #include "SideViewShootemup/SideViewShootemup.h"
 
 AShipPawn::AShipPawn()
