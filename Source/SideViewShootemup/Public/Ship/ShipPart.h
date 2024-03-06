@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "ShipPart.generated.h"
 
 UCLASS()
@@ -15,4 +16,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
 	TObjectPtr<UStaticMeshComponent> MainBody;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
+	TObjectPtr<UPhysicsConstraintComponent> Constraint;
+
+public:
+	void Attach(FVector pos, AShipPart* parent);
 };
