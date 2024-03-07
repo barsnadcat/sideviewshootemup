@@ -4,6 +4,9 @@
 #include "Components/SceneComponent.h"
 #include "ShipGun.generated.h"
 
+
+class AShipPawn;
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SIDEVIEWSHOOTEMUP_API UShipGun : public USceneComponent
 {
@@ -14,6 +17,8 @@ public:
 
     void OnAimAt(const FVector& target, float deltaTime);
     void OnShoot();
+
+    void OnConnectToShip(AShipPawn* ship);
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     double GunTraking = 180.0f;

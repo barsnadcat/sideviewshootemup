@@ -1,5 +1,6 @@
 #include "Ship/ShipGun.h"
 #include "Ship/ShipPawn.h"
+#include "Ship/ShipPart.h"
 #include "CalcNewPitch.h"
 
 UShipGun::UShipGun()
@@ -9,11 +10,17 @@ UShipGun::UShipGun()
     GunMuzzle = CreateDefaultSubobject<USceneComponent>(TEXT("GunMuzzle"));
     GunMuzzle->SetupAttachment(this);
 
-    if (AShipPawn* ship = GetOwner<AShipPawn>())
+    if (AShipPart* part = GetOwner<AShipPart>())
     {
-        ship->AimAt.AddUObject(this, &UShipGun::OnAimAt);
-        ship->Shoot.AddUObject(this, &UShipGun::OnShoot);
+        part->OnConnectToShip.AddUObject(this, &UShipGun::OnConnectToShip);
     }
+}
+
+void UShipGun::OnConnectToShip(AShipPawn* ship)
+{
+    check(ship);
+    ship->AimAt.AddUObject(this, &UShipGun::OnAimAt);
+    ship->Shoot.AddUObject(this, &UShipGun::OnShoot);
 }
 
 void UShipGun::OnAimAt(const FVector& target, float deltaTime)

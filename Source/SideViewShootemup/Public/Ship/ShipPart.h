@@ -5,6 +5,10 @@
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "ShipPart.generated.h"
 
+class AShipPawn;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnConnectToShip, AShipPawn*);
+
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor
 {
@@ -19,6 +23,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
 	TObjectPtr<UPhysicsConstraintComponent> Constraint;
 
+	FOnConnectToShip OnConnectToShip;
 public:
-	void Attach(FVector pos, AShipPart* parent);
+	void Attach(FVector pos, AShipPart* parent, AShipPawn* ship);
 };

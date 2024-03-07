@@ -7,10 +7,16 @@ UShipEngine::UShipEngine()
 {
     PrimaryComponentTick.bCanEverTick = false;
 
-    if (AShipPawn* ship = GetOwner<AShipPawn>())
+    if (AShipPart* part = GetOwner<AShipPart>())
     {
-        ship->GenerateThrust.AddUObject(this, &UShipEngine::OnGenerateThrust);
+        part->OnConnectToShip.AddUObject(this, &UShipEngine::OnConnectToShip);
     }
+}
+
+void UShipEngine::OnConnectToShip(AShipPawn* ship)
+{
+    check(ship);
+    ship->GenerateThrust.AddUObject(this, &UShipEngine::OnGenerateThrust);
 }
 
 void UShipEngine::OnGenerateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust, float deltaTime)
