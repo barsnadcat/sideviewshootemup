@@ -7,7 +7,7 @@
 #include "ShipPawn.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_FourParams(FGenerateThrust, UPrimitiveComponent*, const FVector &, double, float);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FAimAt, const FVector &, float);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector &, float);
 DECLARE_MULTICAST_DELEGATE(FShoot);
 
 UCLASS()
@@ -35,7 +35,7 @@ public:
     TArray<TObjectPtr<AShipPart>> ShipParts;
 
     FGenerateThrust GenerateThrust;
-    FAimAt AimAt;
+    FUpdateAimTarget UpdateAimTarget;
     FShoot Shoot;
 protected:
     // Called when the game starts or when spawned

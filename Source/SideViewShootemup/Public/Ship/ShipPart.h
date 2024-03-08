@@ -26,4 +26,7 @@ public:
 	FOnConnectToShip OnConnectToShip;
 public:
 	void Attach(FVector pos, AShipPart* parent, AShipPawn* ship);
+protected:
+	TWeakObjectPtr<AShipPawn> Ship;
+	virtual void OnAttach() {}
 };

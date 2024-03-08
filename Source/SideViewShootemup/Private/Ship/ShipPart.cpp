@@ -1,4 +1,5 @@
 #include "Ship/ShipPart.h"
+#include "Ship/ShipPawn.h"
 
 AShipPart::AShipPart()
 {
@@ -10,12 +11,15 @@ AShipPart::AShipPart()
 
 void AShipPart::Attach(FVector pos, AShipPart* parent, AShipPawn* ship)
 {
+	check(ship);
+	Ship = ship;
     MainBody->SetRelativeLocation(pos);
 	MainBody->AttachToComponent(parent->MainBody, FAttachmentTransformRules::KeepRelativeTransform);
     Constraint->ConstraintActor1 = this;
     Constraint->ConstraintActor2 = parent;
 	Constraint->InitComponentConstraint();
 	OnConnectToShip.Broadcast(ship);
+	OnAttach();
 }
 
 

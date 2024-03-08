@@ -42,7 +42,7 @@ void AShipPawn::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     GenerateThrust.Broadcast(Bridge->MainBody, mThrustVector, mThrust, DeltaTime);
-    AimAt.Broadcast(mAimPosition, DeltaTime);
+    UpdateAimTarget.Broadcast(mAimPosition, DeltaTime);
 
     mThrust = 0.0f;
     mThrustVector = FVector::UnitZ();
