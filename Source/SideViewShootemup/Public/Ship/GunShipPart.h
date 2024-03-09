@@ -30,6 +30,6 @@ public:
     void OnUpdateAimTarget(const FVector& target, float deltaTime);
     void OnShoot();
 private:
-	virtual void OnAttach() override;
+	virtual void OnAttach(AShipPawn* ship) override;
     double mLastShootSeconds = 0.0f;
 };

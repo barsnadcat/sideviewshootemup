@@ -18,8 +18,7 @@ void AShipPart::Attach(FVector pos, AShipPart* parent, AShipPawn* ship)
     Constraint->ConstraintActor1 = this;
     Constraint->ConstraintActor2 = parent;
 	Constraint->InitComponentConstraint();
-	OnConnectToShip.Broadcast(ship);
-	OnAttach();
+	OnAttach(ship);
 }
 
 

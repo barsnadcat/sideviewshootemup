@@ -34,7 +34,7 @@ public:
     UPROPERTY();
     TArray<TObjectPtr<AShipPart>> ShipParts;
 
-    FGenerateThrust GenerateThrust;
+    FGenerateThrust UpdateThrust;
     FUpdateAimTarget UpdateAimTarget;
     FShoot Shoot;
 protected:

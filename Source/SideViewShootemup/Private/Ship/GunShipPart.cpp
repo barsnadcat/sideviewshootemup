@@ -46,11 +46,8 @@ void AGunShipPart::OnShoot()
     mLastShootSeconds = world->TimeSeconds;
 }
 
-void AGunShipPart::OnAttach()
+void AGunShipPart::OnAttach(AShipPawn* ship)
 {
-    if (AShipPawn* ship = Ship.Get())
-    {
-        ship->UpdateAimTarget.AddUObject(this, &AGunShipPart::OnUpdateAimTarget);
-        ship->Shoot.AddUObject(this, &AGunShipPart::OnShoot);
-    }
+    ship->UpdateAimTarget.AddUObject(this, &AGunShipPart::OnUpdateAimTarget);
+    ship->Shoot.AddUObject(this, &AGunShipPart::OnShoot);
 }

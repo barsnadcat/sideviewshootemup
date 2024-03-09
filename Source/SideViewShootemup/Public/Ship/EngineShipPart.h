@@ -21,6 +21,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
 	TObjectPtr<UAxisComponent> Axis;
 private:
-	virtual void OnAttach() override;
+	virtual void OnAttach(AShipPawn* ship) override;
 	void OnUpdateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust, float deltaTime);
 };

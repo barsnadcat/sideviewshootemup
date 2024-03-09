@@ -8,13 +8,9 @@ AEngineShipPart::AEngineShipPart()
     Axis->SetupAttachment(MainBody);
 }
 
-
-void AEngineShipPart::OnAttach()
+void AEngineShipPart::OnAttach(AShipPawn* ship)
 {
-    if (AShipPawn* ship = Ship.Get())
-    {
-        ship->GenerateThrust.AddUObject(this, &AEngineShipPart::OnUpdateThrust);
-    }
+    ship->UpdateThrust.AddUObject(this, &AEngineShipPart::OnUpdateThrust);
 }
 
 void AEngineShipPart::OnUpdateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust, float deltaTime)
