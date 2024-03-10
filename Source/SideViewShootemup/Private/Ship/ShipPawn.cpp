@@ -25,15 +25,15 @@ void AShipPawn::BeginPlay()
     RootComponent->AttachToComponent(Bridge->MainBody, FAttachmentTransformRules::KeepRelativeTransform);
 
     AShipPart* top = world->SpawnActor<AShipPart>(TopPartClass, spawnParams);
-    top->Attach(FVector(0.f, 0.f, 110.0f), Bridge, this);
+    top->Attach(FVector(0.f, 0.f, 220.0f), Bridge, this);
     ShipParts.Add(top);
 
     AShipPart* left = world->SpawnActor<AShipPart>(SidePartClass, spawnParams);
-    left->Attach(FVector(-110.0f, 0.f, 0.f), Bridge, this);
+    left->Attach(FVector(-220.0f, 0.f, 0.f), Bridge, this);
     ShipParts.Add(left);
 
     AShipPart* right = world->SpawnActor<AShipPart>(SidePartClass, spawnParams);
-    right->Attach(FVector(110.0f, 0.f, 0.f), Bridge, this);
+    right->Attach(FVector(220.0f, 0.f, 0.f), Bridge, this);
     ShipParts.Add(right);
 }
 

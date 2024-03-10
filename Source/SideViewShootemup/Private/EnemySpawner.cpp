@@ -13,7 +13,7 @@ void UEnemySpawner::OnWorldBeginPlay(UWorld& InWorld)
         SpawnInfo.ObjectFlags |= RF_Transient;
         ShipAIController = InWorld.SpawnActor<AShipAIController>(gameMode->ShipAIControllerClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnInfo);
 
-        AShipPawn* ship = InWorld.SpawnActor<AShipPawn>(gameMode->ShipPawnClass, { 800, 0, 400 }, FRotator::ZeroRotator, SpawnInfo);
+        AShipPawn* ship = InWorld.SpawnActor<AShipPawn>(gameMode->ShipPawnClass, { 1000, 0, 500 }, FRotator::ZeroRotator, SpawnInfo);
         ShipAIController->Possess(ship);
     }
 }
