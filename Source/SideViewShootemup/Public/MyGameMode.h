@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "ShipPawn.h"
+#include "Ship/ShipPawn.h"
 #include "ShipAIController.h"
 #include "MyGameMode.generated.h"
 

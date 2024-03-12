@@ -2,10 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Ship/BridgeShipPart.h"
+#include "Ship/ShipPart.h"
 #include "ShipPawn.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_FourParams(FGenerateThrust, UPrimitiveComponent*, const FVector &, double, float);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FAimAt, const FVector &, float);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector &, float);
 DECLARE_MULTICAST_DELEGATE(FShoot);
 
 UCLASS()
@@ -17,11 +19,23 @@ public:
     // Sets default values for this pawn's properties
     AShipPawn();
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    TObjectPtr<UStaticMeshComponent> MainBody;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
+    TSubclassOf<ABridgeShipPart> BridgeClass;
 
-    FGenerateThrust GenerateThrust;
-    FAimAt AimAt;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
+    TSubclassOf<AShipPart> SidePartClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
+    TSubclassOf<AShipPart> TopPartClass;
+
+    UPROPERTY();
+    TObjectPtr<ABridgeShipPart> Bridge;
+
+    UPROPERTY();
+    TArray<TObjectPtr<AShipPart>> ShipParts;
+
+    FGenerateThrust UpdateThrust;
+    FUpdateAimTarget UpdateAimTarget;
     FShoot Shoot;
 protected:
     // Called when the game starts or when spawned
