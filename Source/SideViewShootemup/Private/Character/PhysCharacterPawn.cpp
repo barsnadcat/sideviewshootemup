@@ -3,7 +3,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Character/PhysCharacterMovementComponent.h"
 
 
 APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializer)
@@ -38,7 +38,7 @@ APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializ
 	CapsuleComponent->bDynamicObstacle = true;
 	RootComponent = CapsuleComponent;
 
-	CharacterMovement = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("MovementComponent"));
+	CharacterMovement = CreateDefaultSubobject<UPhysCharacterMovementComponent>(TEXT("MovementComponent"));
 	if (CharacterMovement)
 	{
 		CharacterMovement->UpdatedComponent = CapsuleComponent;

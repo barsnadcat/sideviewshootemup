@@ -8,7 +8,7 @@
 
 
 class UCapsuleComponent;
-class UCharacterMovementComponent;
+class UPhysCharacterMovementComponent;
 class UArrowComponent;
 class USkeletalMeshComponent;
 
@@ -27,7 +27,7 @@ public:
 
 	/** Movement component used for movement logic in various movement modes (walking, falling, etc), containing relevant settings and functions to control movement. */
 	UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCharacterMovementComponent> CharacterMovement;
+	TObjectPtr<UPhysCharacterMovementComponent> CharacterMovement;
 
 	/** The CapsuleComponent being used for movement collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
 	UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
