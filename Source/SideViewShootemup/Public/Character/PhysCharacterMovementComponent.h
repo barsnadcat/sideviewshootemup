@@ -1,3 +1,5 @@
+// Copyright 2023 FragLab Ltd. All rights reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -5,13 +7,13 @@
 #include "PhysCharacterMovementComponent.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API UPhysCharacterMovementComponent : public UPawnMovementComponent
 {
-	GENERATED_BODY()
-public:	
-	void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction);
-
+    GENERATED_BODY()
+public:
+    void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction);
+    FVector Acceleration;
 };
