@@ -15,5 +15,9 @@ class SIDEVIEWSHOOTEMUP_API UPhysCharacterMovementComponent : public UPawnMoveme
     GENERATED_BODY()
 public:
     void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction);
+
+    UPROPERTY(EditAnywhere)
+    double AccelerationScale = 2000.f;
+
     FVector Acceleration;
 };

@@ -1,6 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Character/PhysCharacterMovementComponent.h"
+#include "SideViewShootemup/SideViewShootemup.h"
 
 void UPhysCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -12,20 +11,23 @@ void UPhysCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevel
     {
         return;
     }
-    Acceleration = InputVector * 2000.0f;
-
-    UpdatedPrimitive->AddForce(Acceleration, NAME_None, true);
-
-    FRotator orientation;
-
-    if (Acceleration.X > 0.0f)
+    Acceleration = InputVector * AccelerationScale;
+    
+    if (!Acceleration.IsNearlyZero())
     {
-        orientation.Yaw = 0.0f;
-        UpdatedPrimitive->SetWorldRotation(orientation);
+        UpdatedPrimitive->AddForce(Acceleration, NAME_None, true);
+
+        FRotator orientation;
+        if (Acceleration.X > 0.01f)
+        {
+            orientation.Yaw = 0.0f;
+            MoveUpdatedComponent(FVector::ZeroVector, orientation, true);
+        }
+        else if (Acceleration.X < -0.01f)
+        {
+            orientation.Yaw = 180.0f;
+            MoveUpdatedComponent(FVector::ZeroVector, orientation, true);
+        }
     }
-    else if (Acceleration.X < 0.0f)
-    {
-        orientation.Yaw = 180.0f;
-        UpdatedPrimitive->SetWorldRotation(orientation);
-    }
+
 }
