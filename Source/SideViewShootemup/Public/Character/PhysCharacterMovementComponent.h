@@ -20,4 +20,6 @@ public:
     double AccelerationScale = 2000.f;
 
     FVector Acceleration;
+private:
+    void UpdatetOrientation(const FVector& v);
 };

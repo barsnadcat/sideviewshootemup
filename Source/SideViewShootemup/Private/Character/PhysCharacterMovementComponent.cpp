@@ -12,22 +12,26 @@ void UPhysCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevel
         return;
     }
     Acceleration = InputVector * AccelerationScale;
-    
+
     if (!Acceleration.IsNearlyZero())
     {
         UpdatedPrimitive->AddForce(Acceleration, NAME_None, true);
-
-        FRotator orientation;
-        if (Acceleration.X > 0.01f)
-        {
-            orientation.Yaw = 0.0f;
-            MoveUpdatedComponent(FVector::ZeroVector, orientation, true);
-        }
-        else if (Acceleration.X < -0.01f)
-        {
-            orientation.Yaw = 180.0f;
-            MoveUpdatedComponent(FVector::ZeroVector, orientation, true);
-        }
+        UpdatetOrientation(Acceleration);
     }
-
 }
+
+void UPhysCharacterMovementComponent::UpdatetOrientation(const FVector& v)
+{
+    FRotator orientation;
+    if (v.X > 1.f)
+    {
+        orientation.Yaw = 0.0f;
+        MoveUpdatedComponent(FVector::ZeroVector, orientation, true);
+    }
+    else if (v.X < -1.f)
+    {
+        orientation.Yaw = 180.0f;
+        MoveUpdatedComponent(FVector::ZeroVector, orientation, true);
+    }
+}
+
