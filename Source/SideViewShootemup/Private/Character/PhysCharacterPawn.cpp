@@ -84,7 +84,7 @@ FVector APhysCharacterPawn::GetAcceleration() const
 
 bool APhysCharacterPawn::IsFalling() const
 {
-    return false;
+    return PhysCharacterMovement ? PhysCharacterMovement->IsFalling() : false;
 }
 
 // Called when the game starts or when spawned
