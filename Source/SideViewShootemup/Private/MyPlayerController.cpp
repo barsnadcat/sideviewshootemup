@@ -3,6 +3,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Ship/ShipPawn.h"
+#include "Character/PhysCharacterPawn.h"
 #include "MyGameMode.h"
 
 void AMyPlayerController::SetupInputComponent()
@@ -87,7 +88,7 @@ void AMyPlayerController::OnMoveTriggered(const FInputActionInstance& thrustVect
     FVector2D vector = thrustVectorAction.GetValue().Get<FVector2D>();
     if (GetPawn() == DefaultPawn)
     {
-        GetPawn()->AddMovementInput(FVector(vector.X, 0.0f, vector.Y));
+        DefaultPawn->AddMovementInput(FVector(vector.X, 0.0f, vector.Y));
     }
 }
 
@@ -101,22 +102,20 @@ void AMyPlayerController::OnShootTriggered()
 
 void AMyPlayerController::OnInteractTriggered()
 {
-    if (AMyGameMode* const gameMode = GetWorld()->GetAuthGameMode<AMyGameMode>())
+    if (GetPawn() == DefaultPawn)
     {
-        if (gameMode->ShipPawn)
-        {
-            Possess(gameMode->ShipPawn);
-        }
+        DefaultPawn->Interact(this);
     }
 }
 
 void AMyPlayerController::OnCancelInteractionTriggered()
 {
     Possess(DefaultPawn);
-    if (AMyGameMode* const gameMode = GetWorld()->GetAuthGameMode<AMyGameMode>())
-    {
-        gameMode->ShipAutoPilot->Possess(gameMode->ShipPawn);
-    }
+
+    //if (AMyGameMode* const gameMode = GetWorld()->GetAuthGameMode<AMyGameMode>())
+    //{
+    //    gameMode->ShipAutoPilot->Possess(gameMode->ShipPawn);
+    // }
 }
 
 void AMyPlayerController::SetPawn(APawn* inPawn)
@@ -149,5 +148,6 @@ void AMyPlayerController::SetPawn(APawn* inPawn)
 void AMyPlayerController::SetDefaultPawn(APawn* defaultPawn)
 {
     check(defaultPawn);
-    DefaultPawn = defaultPawn;
+    APhysCharacterPawn* character = CastChecked<APhysCharacterPawn>(defaultPawn);
+    DefaultPawn = character;
 }

@@ -17,4 +17,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UBoxComponent> BoxCollisionComponent;
+
+	virtual void Interact(APlayerController* playerController) override;
 };

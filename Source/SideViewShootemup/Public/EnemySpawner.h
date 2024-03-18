@@ -6,6 +6,8 @@
 
 #include "EnemySpawner.generated.h"
 
+class AShipPawn;
+
 /**
  *
  */
@@ -16,6 +18,9 @@ class SIDEVIEWSHOOTEMUP_API UEnemySpawner : public UTickableWorldSubsystem
 public:
     UPROPERTY()
     TObjectPtr<AShipAIController> ShipAIController;
+
+    UPROPERTY()
+    TObjectPtr<AShipPawn> Ship;
 
     virtual void OnWorldBeginPlay(UWorld& InWorld);
 

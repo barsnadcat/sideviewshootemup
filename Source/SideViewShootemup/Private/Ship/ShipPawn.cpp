@@ -21,6 +21,7 @@ void AShipPawn::BeginPlay()
     Bridge = world->SpawnActor<ABridgeShipPart>(BridgeClass, spawnParams);
 
     Bridge->SetActorTransform(GetActorTransform());
+    Bridge->SetShip(this);
     SetActorTransform(FTransform::Identity);
     RootComponent->AttachToComponent(Bridge->MainBody, FAttachmentTransformRules::KeepRelativeTransform);
 

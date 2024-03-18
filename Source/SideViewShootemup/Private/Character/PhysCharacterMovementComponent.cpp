@@ -25,27 +25,8 @@ void UPhysCharacterMovementComponent::SetUpdatedComponent(USceneComponent* NewUp
     Super::SetUpdatedComponent(NewUpdatedComponent);
     if (UpdatedPrimitive)
     {
-        UpdatedPrimitive->OnComponentBeginOverlap.AddDynamic(this, &UPhysCharacterMovementComponent::OnBeginOverlap);
-        UpdatedPrimitive->OnComponentEndOverlap.AddDynamic(this, &UPhysCharacterMovementComponent::OnEndOverlap);
         UpdatedPrimitive->OnComponentHit.AddDynamic(this, &UPhysCharacterMovementComponent::OnComponentHit);
     }
-}
-
-void UPhysCharacterMovementComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-    UE_LOG(Game, Display, TEXT("Begin: comp:%s other:%s othercomp:%s bodyIndex:%d fromSweep:%d result:%d"),
-        OverlappedComp ? *OverlappedComp->GetFName().ToString() : TEXT("null"),
-        Other ? *Other->GetFName().ToString() : TEXT("null"),
-        OtherComp ? *OtherComp->GetFName().ToString() : TEXT("null"), OtherBodyIndex, bFromSweep, SweepResult.bBlockingHit);
-    
-}
-
-void UPhysCharacterMovementComponent::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-    UE_LOG(Game, Display, TEXT("End: comp:%s other:%s othercomp:%s bodyIndex:%d"),
-        OverlappedComp ? *OverlappedComp->GetFName().ToString() : TEXT("null"),
-        Other ? *Other->GetFName().ToString() : TEXT("null"),
-        OtherComp ? *OtherComp->GetFName().ToString() : TEXT("null"), OtherBodyIndex);
 }
 
 void UPhysCharacterMovementComponent::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

@@ -6,6 +6,8 @@
 #include "InputMappingContext.h"
 #include "MyPlayerController.generated.h"
 
+
+class APhysCharacterPawn;
 /**
  *
  */
@@ -54,5 +56,5 @@ private:
     FVector GetMouseWorldPosition(double planeY);
 
     UPROPERTY()
-    TObjectPtr<APawn> DefaultPawn;
+    TObjectPtr<APhysCharacterPawn> DefaultPawn;
 };

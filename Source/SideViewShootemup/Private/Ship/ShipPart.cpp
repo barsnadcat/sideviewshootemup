@@ -21,4 +21,9 @@ void AShipPart::Attach(FVector pos, AShipPart* parent, AShipPawn* ship)
 	OnAttach(ship);
 }
 
+inline void AShipPart::SetShip(AShipPawn* ship) 
+{
+	Ship = ship; 
+}
+
 

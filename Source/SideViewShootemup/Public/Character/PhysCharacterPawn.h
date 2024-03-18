@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -10,6 +8,8 @@ class UCapsuleComponent;
 class UPhysCharacterMovementComponent;
 class UArrowComponent;
 class USkeletalMeshComponent;
+class AShipPart;
+class APlayerController;
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API APhysCharacterPawn : public APawn
@@ -31,11 +31,20 @@ public:
     UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
+    UFUNCTION()
+    void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+    UFUNCTION()
+    void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+
     UFUNCTION(BlueprintCallable, Category = "Transformation")
     virtual FVector GetAcceleration() const;
 
     UFUNCTION(BlueprintCallable, Category = "Transformation")
     virtual bool IsFalling() const;
+
+    void Interact(APlayerController* playerController);
+
 
 #if WITH_EDITORONLY_DATA
     /** Component shown in the editor only to indicate character facing */
@@ -44,13 +53,6 @@ public:
 #endif
 
 protected:
-    // Called when the game starts or when spawned
-    virtual void BeginPlay() override;
-
-public:
-    // Called every frame
-    virtual void Tick(float DeltaTime) override;
-
-    // Called to bind functionality to input
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    UPROPERTY()
+    TWeakObjectPtr<AShipPart> OverlappedShipPart;
 };

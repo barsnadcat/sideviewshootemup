@@ -1,7 +1,6 @@
-// Copyright 2023 FragLab Ltd. All rights reserved.
-
 #include "Character/PhysCharacterPawn.h"
-
+#include "SideViewShootemup/SideViewShootemup.h"
+#include "Ship/ShipPart.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -37,6 +36,11 @@ APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializ
     CapsuleComponent->SetShouldUpdatePhysicsVolume(true);
     CapsuleComponent->SetCanEverAffectNavigation(false);
     CapsuleComponent->bDynamicObstacle = true;
+
+
+    CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &APhysCharacterPawn::OnBeginOverlap);
+    CapsuleComponent->OnComponentEndOverlap.AddDynamic(this, &APhysCharacterPawn::OnEndOverlap);
+
     RootComponent = CapsuleComponent;
 
     PhysCharacterMovement = CreateDefaultSubobject<UPhysCharacterMovementComponent>(TEXT("MovementComponent"));
@@ -77,6 +81,34 @@ APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializ
     }
 }
 
+void APhysCharacterPawn::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    UE_LOG(Game, Display, TEXT("Begin: comp:%s other:%s othercomp:%s bodyIndex:%d fromSweep:%d result:%d"),
+        OverlappedComp ? *OverlappedComp->GetFName().ToString() : TEXT("null"),
+        Other ? *Other->GetFName().ToString() : TEXT("null"),
+        OtherComp ? *OtherComp->GetFName().ToString() : TEXT("null"), OtherBodyIndex, bFromSweep, SweepResult.bBlockingHit);
+
+    if (AShipPart* part = Cast<AShipPart>(Other))
+    {
+        OverlappedShipPart = part;
+    }
+}
+
+void APhysCharacterPawn::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    UE_LOG(Game, Display, TEXT("End: comp:%s other:%s othercomp:%s bodyIndex:%d"),
+        OverlappedComp ? *OverlappedComp->GetFName().ToString() : TEXT("null"),
+        Other ? *Other->GetFName().ToString() : TEXT("null"),
+        OtherComp ? *OtherComp->GetFName().ToString() : TEXT("null"), OtherBodyIndex);
+    if (AShipPart* part = Cast<AShipPart>(Other))
+    {
+        if (part == OverlappedShipPart)
+        {
+            OverlappedShipPart = nullptr;
+        }
+    }
+}
+
 FVector APhysCharacterPawn::GetAcceleration() const
 {
     return PhysCharacterMovement ? PhysCharacterMovement->Acceleration : FVector::Zero();
@@ -87,20 +119,11 @@ bool APhysCharacterPawn::IsFalling() const
     return PhysCharacterMovement ? PhysCharacterMovement->IsFalling() : false;
 }
 
-// Called when the game starts or when spawned
-void APhysCharacterPawn::BeginPlay()
+void APhysCharacterPawn::Interact(APlayerController* playerController)
 {
-    Super::BeginPlay();
+    if (AShipPart* part = OverlappedShipPart.Get())
+    {
+        part->Interact(playerController);
+    }
 }
 
-// Called every frame
-void APhysCharacterPawn::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-}
-
-// Called to bind functionality to input
-void APhysCharacterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
-}

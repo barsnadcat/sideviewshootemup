@@ -6,6 +6,7 @@
 #include "ShipPart.generated.h"
 
 class AShipPawn;
+class APlayerController;
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor
@@ -22,6 +23,8 @@ public:
 	TObjectPtr<UPhysicsConstraintComponent> Constraint;
 
 	void Attach(FVector pos, AShipPart* parent, AShipPawn* ship);
+	virtual void Interact(APlayerController* playerController) {}
+	void SetShip(AShipPawn* ship);
 protected:
 	TWeakObjectPtr<AShipPawn> Ship;
 	virtual void OnAttach(AShipPawn* ship) {}
