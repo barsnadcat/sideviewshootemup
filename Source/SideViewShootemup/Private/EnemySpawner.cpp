@@ -12,9 +12,6 @@ void UEnemySpawner::OnWorldBeginPlay(UWorld& InWorld)
         SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
         SpawnInfo.ObjectFlags |= RF_Transient;
         Ship = InWorld.SpawnActor<AShipPawn>(gameMode->ShipPawnClass, { 1000, 0, 500 }, FRotator::ZeroRotator, SpawnInfo);
-
-        ShipAIController = InWorld.SpawnActor<AShipAIController>(gameMode->ShipAIControllerClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnInfo);
-        //ShipAIController->Possess(Ship);
     }
 }
 

@@ -20,8 +20,6 @@ public:
     TSubclassOf<AShipAIController> ShipAIControllerClass;
     UPROPERTY()
     TObjectPtr<AShipPawn> ShipPawn;
-    UPROPERTY()
-    TObjectPtr<AShipAIController> ShipAutoPilot;
 
     virtual APawn* SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform) override;
 

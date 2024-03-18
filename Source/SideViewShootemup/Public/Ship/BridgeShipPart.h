@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "BridgeShipPart.generated.h"
 
+class AShipAIController;
 /**
  * 
  */
@@ -17,6 +18,15 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UBoxComponent> BoxCollisionComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
+	TSubclassOf<AShipAIController> ShipAIControllerClass;
+
+	UPROPERTY()
+	TObjectPtr<AShipAIController> ShipAutoPilot;
+
+	virtual void BeginPlay();
 
 	virtual void Interact(APlayerController* playerController) override;
+
 };

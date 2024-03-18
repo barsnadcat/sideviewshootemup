@@ -17,9 +17,6 @@ class SIDEVIEWSHOOTEMUP_API UEnemySpawner : public UTickableWorldSubsystem
     GENERATED_BODY()
 public:
     UPROPERTY()
-    TObjectPtr<AShipAIController> ShipAIController;
-
-    UPROPERTY()
     TObjectPtr<AShipPawn> Ship;
 
     virtual void OnWorldBeginPlay(UWorld& InWorld);

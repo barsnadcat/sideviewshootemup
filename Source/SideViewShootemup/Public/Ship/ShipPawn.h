@@ -48,6 +48,7 @@ public:
     void SetAimPosition(const FVector& vector) { mAimPosition = vector; }
     void SetThrustVector(const FVector& vector) { mThrustVector = vector; }
     void SetThrust(float thrust) { mThrust = thrust; }
+    void AutoPilot();
 private:
     FVector mThrustVector = FVector::UnitZ();
     FVector mAimPosition = FVector::UnitX();

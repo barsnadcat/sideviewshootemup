@@ -110,12 +110,11 @@ void AMyPlayerController::OnInteractTriggered()
 
 void AMyPlayerController::OnCancelInteractionTriggered()
 {
-    Possess(DefaultPawn);
-
-    //if (AMyGameMode* const gameMode = GetWorld()->GetAuthGameMode<AMyGameMode>())
-    //{
-    //    gameMode->ShipAutoPilot->Possess(gameMode->ShipPawn);
-    // }
+    if (AShipPawn* ship = GetPawn<AShipPawn>())
+    {
+        ship->AutoPilot();
+        Possess(DefaultPawn);
+    }
 }
 
 void AMyPlayerController::SetPawn(APawn* inPawn)

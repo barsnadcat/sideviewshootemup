@@ -1,5 +1,6 @@
 #include "Ship/ShipPawn.h"
 #include "SideViewShootemup/SideViewShootemup.h"
+#include "ShipAIController.h"
 
 AShipPawn::AShipPawn()
 {
@@ -36,6 +37,8 @@ void AShipPawn::BeginPlay()
     AShipPart* right = world->SpawnActor<AShipPart>(SidePartClass, spawnParams);
     right->Attach(FVector(220.0f, 0.f, 0.f), Bridge, this);
     ShipParts.Add(right);
+
+    AutoPilot();
 }
 
 void AShipPawn::Tick(float DeltaTime)
@@ -47,4 +50,12 @@ void AShipPawn::Tick(float DeltaTime)
 
     mThrust = 0.0f;
     mThrustVector = FVector::UnitZ();
+}
+
+void AShipPawn::AutoPilot()
+{
+    if (Bridge)
+    {
+        Bridge->ShipAutoPilot->Possess(this);
+    }
 }
