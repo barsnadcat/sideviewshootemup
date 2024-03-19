@@ -1,6 +1,7 @@
 #include "Ship/GunShipPart.h"
-#include "SideViewShootemup/SideViewShootemup.h"
+
 #include "Ship/ShipPawn.h"
+#include "SideViewShootemup/SideViewShootemup.h"
 
 AGunShipPart::AGunShipPart()
 {

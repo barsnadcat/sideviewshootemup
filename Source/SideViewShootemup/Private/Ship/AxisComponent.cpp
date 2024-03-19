@@ -1,7 +1,7 @@
 #include "Ship/AxisComponent.h"
-#include "SideViewShootemup/SideViewShootemup.h"
-#include "CalcNewPitch.h"
 
+#include "CalcNewPitch.h"
+#include "SideViewShootemup/SideViewShootemup.h"
 
 UAxisComponent::UAxisComponent()
 {

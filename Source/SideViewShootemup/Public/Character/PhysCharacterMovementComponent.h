@@ -1,9 +1,8 @@
-// Copyright 2023 FragLab Ltd. All rights reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PawnMovementComponent.h"
+
 #include "PhysCharacterMovementComponent.generated.h"
 
 /**
@@ -25,6 +24,7 @@ public:
 
     FVector Acceleration;
     bool IsFalling();
+
 private:
     void UpdatetOrientation(const FVector& v);
     double LastGroundContact = 0.0f;

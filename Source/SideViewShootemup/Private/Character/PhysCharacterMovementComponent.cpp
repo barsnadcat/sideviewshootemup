@@ -1,4 +1,5 @@
 #include "Character/PhysCharacterMovementComponent.h"
+
 #include "SideViewShootemup/SideViewShootemup.h"
 
 void UPhysCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -76,4 +77,3 @@ void UPhysCharacterMovementComponent::UpdatetOrientation(const FVector& v)
         MoveUpdatedComponent(FVector::ZeroVector, orientation, true);
     }
 }
-

@@ -1,6 +1,7 @@
 #include "Ship/ShipPawn.h"
-#include "SideViewShootemup/SideViewShootemup.h"
+
 #include "ShipAIController.h"
+#include "SideViewShootemup/SideViewShootemup.h"
 
 AShipPawn::AShipPawn()
 {

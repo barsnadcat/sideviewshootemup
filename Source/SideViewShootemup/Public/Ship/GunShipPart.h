@@ -1,17 +1,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ship/ShipPart.h"
 #include "Ship/AxisComponent.h"
+#include "Ship/ShipPart.h"
+
 #include "GunShipPart.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AGunShipPart : public AShipPart
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 public:
     AGunShipPart();
 
@@ -29,7 +30,8 @@ public:
 
     void OnUpdateAimTarget(const FVector& target, float deltaTime);
     void OnShoot();
+
 private:
-	virtual void OnAttach(AShipPawn* ship) override;
+    virtual void OnAttach(AShipPawn* ship) override;
     double mLastShootSeconds = 0.0f;
 };

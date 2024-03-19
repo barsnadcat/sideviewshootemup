@@ -4,6 +4,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "Ship/ShipPawn.h"
 #include "ShipAIController.h"
+
 #include "MyGameMode.generated.h"
 
 /**

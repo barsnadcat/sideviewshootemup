@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+
 #include "PhysCharacterPawn.generated.h"
 
 class UCapsuleComponent;
@@ -36,7 +37,6 @@ public:
     UFUNCTION()
     void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-
     UFUNCTION(BlueprintCallable, Category = "Transformation")
     virtual FVector GetAcceleration() const;
 
@@ -44,7 +44,6 @@ public:
     virtual bool IsFalling() const;
 
     void Interact(APlayerController* playerController);
-
 
 #if WITH_EDITORONLY_DATA
     /** Component shown in the editor only to indicate character facing */

@@ -4,10 +4,11 @@
 #include "GameFramework/Pawn.h"
 #include "Ship/BridgeShipPart.h"
 #include "Ship/ShipPart.h"
+
 #include "ShipPawn.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_FourParams(FGenerateThrust, UPrimitiveComponent*, const FVector &, double, float);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector &, float);
+DECLARE_MULTICAST_DELEGATE_FourParams(FGenerateThrust, UPrimitiveComponent*, const FVector&, double, float);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector&, float);
 DECLARE_MULTICAST_DELEGATE(FShoot);
 
 UCLASS()
@@ -37,6 +38,7 @@ public:
     FGenerateThrust UpdateThrust;
     FUpdateAimTarget UpdateAimTarget;
     FShoot Shoot;
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -49,6 +51,7 @@ public:
     void SetThrustVector(const FVector& vector) { mThrustVector = vector; }
     void SetThrust(float thrust) { mThrust = thrust; }
     void AutoPilot();
+
 private:
     FVector mThrustVector = FVector::UnitZ();
     FVector mAimPosition = FVector::UnitX();

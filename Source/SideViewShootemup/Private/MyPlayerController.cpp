@@ -1,10 +1,11 @@
 #include "MyPlayerController.h"
-#include "SideViewShootemup/SideViewShootemup.h"
+
+#include "Character/PhysCharacterPawn.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Ship/ShipPawn.h"
-#include "Character/PhysCharacterPawn.h"
 #include "MyGameMode.h"
+#include "Ship/ShipPawn.h"
+#include "SideViewShootemup/SideViewShootemup.h"
 
 void AMyPlayerController::SetupInputComponent()
 {
@@ -75,10 +76,10 @@ FVector AMyPlayerController::GetMouseWorldPosition(double planeY)
 void AMyPlayerController::OnTrustVectorTriggered(const FInputActionInstance& thrustVectorAction)
 {
     FVector2D thrustVector = thrustVectorAction.GetValue().Get<FVector2D>();
-    //UE_LOG(Game, Display, TEXT("OnTrustVectorTriggered %s"), *thrustVector.ToString());
+    // UE_LOG(Game, Display, TEXT("OnTrustVectorTriggered %s"), *thrustVector.ToString());
     if (AShipPawn* ship = GetPawn<AShipPawn>())
     {
-        ship->SetThrustVector({ thrustVector.X, 0.0f, thrustVector.Y });
+        ship->SetThrustVector({thrustVector.X, 0.0f, thrustVector.Y});
         ship->SetThrust(1.0f);
     }
 }

@@ -1,4 +1,5 @@
 #include "Ship/EngineShipPart.h"
+
 #include "Ship/ShipPawn.h"
 
 AEngineShipPart::AEngineShipPart()
@@ -16,7 +17,7 @@ void AEngineShipPart::OnAttach(AShipPawn* ship)
 void AEngineShipPart::OnUpdateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust, float deltaTime)
 {
     check(primitive);
-    
+
     Axis->UpdateDirection(vector, deltaTime);
 
     if (thrust != 0.0f)

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
 #include "ShipAIController.h"
+#include "Subsystems/WorldSubsystem.h"
 
 #include "EnemySpawner.generated.h"
 

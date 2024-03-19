@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
+
 #include "ShipPart.generated.h"
 
 class AShipPawn;
@@ -11,21 +12,22 @@ class APlayerController;
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	AShipPart();
+    GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-	TObjectPtr<UStaticMeshComponent> MainBody;
+public:
+    AShipPart();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
-	TObjectPtr<UPhysicsConstraintComponent> Constraint;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    TObjectPtr<UStaticMeshComponent> MainBody;
 
-	void Attach(FVector pos, AShipPart* parent, AShipPawn* ship);
-	virtual void Interact(APlayerController* playerController) {}
-	void SetShip(AShipPawn* ship);
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
+    TObjectPtr<UPhysicsConstraintComponent> Constraint;
+
+    void Attach(FVector pos, AShipPart* parent, AShipPawn* ship);
+    virtual void Interact(APlayerController* playerController) {}
+    void SetShip(AShipPawn* ship);
+
 protected:
-	TWeakObjectPtr<AShipPawn> Ship;
-	virtual void OnAttach(AShipPawn* ship) {}
+    TWeakObjectPtr<AShipPawn> Ship;
+    virtual void OnAttach(AShipPawn* ship) {}
 };

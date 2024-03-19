@@ -3,8 +3,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-
 #include "Runtime/Engine/Classes/Components/SphereComponent.h"
+
 #include "GunProjectile.generated.h"
 
 UCLASS()

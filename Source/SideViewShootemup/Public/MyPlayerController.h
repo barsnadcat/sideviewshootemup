@@ -4,8 +4,8 @@
 #include "GameFramework/PlayerController.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
-#include "MyPlayerController.generated.h"
 
+#include "MyPlayerController.generated.h"
 
 class APhysCharacterPawn;
 /**
@@ -17,7 +17,6 @@ class SIDEVIEWSHOOTEMUP_API AMyPlayerController : public APlayerController
     GENERATED_BODY()
 
 public:
-
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     TObjectPtr<UInputMappingContext> ShipInputMappingContext;
 

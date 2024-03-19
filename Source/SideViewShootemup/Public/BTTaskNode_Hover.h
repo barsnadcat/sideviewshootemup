@@ -1,7 +1,8 @@
 #pragma once
 
-#include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "CoreMinimal.h"
+
 #include "BTTaskNode_Hover.generated.h"
 
 /**

@@ -1,9 +1,11 @@
 #include "BTTaskNode_Hover.h"
+
 #include "AIController.h"
 #include "Ship/ShipPawn.h"
 #include "SideViewShootemup/SideViewShootemup.h"
 
-UBTTaskNode_Hover::UBTTaskNode_Hover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UBTTaskNode_Hover::UBTTaskNode_Hover(const FObjectInitializer& ObjectInitializer)
+    : Super(ObjectInitializer)
 {
     INIT_TASK_NODE_NOTIFY_FLAGS();
 }
@@ -21,7 +23,7 @@ void UBTTaskNode_Hover::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
         AShipPawn* ship = controller->GetPawn<AShipPawn>();
         if (ship)
         {
-            ship->SetThrustVector({ 0.0f, 0.0f, 1.f });
+            ship->SetThrustVector({0.0f, 0.0f, 1.f});
             ship->SetThrust(0.25f);
         }
     }

@@ -1,10 +1,11 @@
 #include "Character/PhysCharacterPawn.h"
-#include "SideViewShootemup/SideViewShootemup.h"
-#include "Ship/ShipPart.h"
-#include "Components/SkeletalMeshComponent.h"
+
+#include "Character/PhysCharacterMovementComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Character/PhysCharacterMovementComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Ship/ShipPart.h"
+#include "SideViewShootemup/SideViewShootemup.h"
 
 APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
@@ -37,7 +38,6 @@ APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializ
     CapsuleComponent->SetCanEverAffectNavigation(false);
     CapsuleComponent->bDynamicObstacle = true;
 
-
     CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &APhysCharacterPawn::OnBeginOverlap);
     CapsuleComponent->OnComponentEndOverlap.AddDynamic(this, &APhysCharacterPawn::OnEndOverlap);
 
@@ -61,7 +61,7 @@ APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializ
         ArrowComponent->bIsScreenSizeScaled = true;
         ArrowComponent->SetSimulatePhysics(false);
     }
-#endif // WITH_EDITORONLY_DATA
+#endif    // WITH_EDITORONLY_DATA
 
     Mesh = CreateOptionalDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
     if (Mesh)
@@ -126,4 +126,3 @@ void APhysCharacterPawn::Interact(APlayerController* playerController)
         part->Interact(playerController);
     }
 }
-

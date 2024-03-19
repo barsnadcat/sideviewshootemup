@@ -1,5 +1,3 @@
-// Copyright 2023 FragLab Ltd. All rights reserved.
-
 #include "CalcNewPitch.h"
 
 double CalcNewPitch(const FVector& current, const FVector& requested, double maxDelta)
