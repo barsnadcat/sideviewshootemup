@@ -1,6 +1,8 @@
 #include "MyGameMode.h"
 
 #include "MyPlayerController.h"
+#include "Ship/ShipPawn.h"
+#include "ShipAIController.h"
 
 APawn* AMyGameMode::SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform)
 {

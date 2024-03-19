@@ -23,10 +23,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
     TSubclassOf<AShipAIController> ShipAIControllerClass;
 
-    UPROPERTY()
-    TObjectPtr<AShipAIController> ShipAutoPilot;
+    virtual void Interact(APlayerController* playerController) override;
+    AShipAIController* GetAutoPilot() { return ShipAutoPilot; }
 
+private:
     virtual void BeginPlay();
 
-    virtual void Interact(APlayerController* playerController) override;
+    UPROPERTY()
+    TObjectPtr<AShipAIController> ShipAutoPilot;
 };

@@ -28,10 +28,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     double RPM = 180.f;
 
+private:
     void OnUpdateAimTarget(const FVector& target, float deltaTime);
     void OnShoot();
-
-private:
     virtual void OnAttach(AShipPawn* ship) override;
     double mLastShootSeconds = 0.0f;
 };

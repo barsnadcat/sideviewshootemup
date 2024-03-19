@@ -1,5 +1,7 @@
 #include "Ship/ShipPawn.h"
 
+#include "Ship/BridgeShipPart.h"
+#include "Ship/ShipPart.h"
 #include "ShipAIController.h"
 #include "SideViewShootemup/SideViewShootemup.h"
 
@@ -55,8 +57,8 @@ void AShipPawn::Tick(float DeltaTime)
 
 void AShipPawn::AutoPilot()
 {
-    if (Bridge)
+    if (IsValid(Bridge))
     {
-        Bridge->ShipAutoPilot->Possess(this);
+        Bridge->GetAutoPilot()->Possess(this);
     }
 }

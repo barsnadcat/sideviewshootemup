@@ -22,10 +22,11 @@ public:
     UPROPERTY(EditAnywhere)
     double AccelerationScale = 2000.f;
 
-    FVector Acceleration;
-    bool IsFalling();
+    virtual bool IsFalling() const override;
+    const FVector& GetAcceleration() const { return Acceleration; }
 
 private:
     void UpdatetOrientation(const FVector& v);
+    FVector Acceleration;
     double LastGroundContact = 0.0f;
 };

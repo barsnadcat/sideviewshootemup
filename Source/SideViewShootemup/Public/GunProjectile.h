@@ -13,10 +13,8 @@ class SIDEVIEWSHOOTEMUP_API AGunProjectile : public AActor
     GENERATED_BODY()
 
 public:
-    // Sets default values for this actor's properties
     AGunProjectile();
 
-    /** Sphere collision component */
     UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
     TObjectPtr<USphereComponent> CollisionComp;
 

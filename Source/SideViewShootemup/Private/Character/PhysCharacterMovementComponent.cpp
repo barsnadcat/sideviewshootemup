@@ -41,7 +41,7 @@ void UPhysCharacterMovementComponent::OnComponentHit(UPrimitiveComponent* HitCom
     LastGroundContact = GetWorld() ? GetWorld()->TimeSeconds : 0.0f;
 }
 
-bool UPhysCharacterMovementComponent::IsFalling()
+bool UPhysCharacterMovementComponent::IsFalling() const
 {
     if (!UpdatedPrimitive)
     {

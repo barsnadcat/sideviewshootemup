@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Ship/BridgeShipPart.h"
-#include "Ship/ShipPart.h"
 
 #include "ShipPawn.generated.h"
+
+class AShipPart;
+class ABridgeShipPart;
 
 DECLARE_MULTICAST_DELEGATE_FourParams(FGenerateThrust, UPrimitiveComponent*, const FVector&, double, float);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector&, float);
@@ -29,22 +30,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
     TSubclassOf<AShipPart> TopPartClass;
 
-    UPROPERTY();
-    TObjectPtr<ABridgeShipPart> Bridge;
-
-    UPROPERTY();
-    TArray<TObjectPtr<AShipPart>> ShipParts;
-
     FGenerateThrust UpdateThrust;
     FUpdateAimTarget UpdateAimTarget;
     FShoot Shoot;
 
-protected:
-    // Called when the game starts or when spawned
-    virtual void BeginPlay() override;
-
 public:
-    // Called every frame
+    virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
 
     void SetAimPosition(const FVector& vector) { mAimPosition = vector; }
@@ -53,6 +44,12 @@ public:
     void AutoPilot();
 
 private:
+    UPROPERTY();
+    TObjectPtr<ABridgeShipPart> Bridge;
+
+    UPROPERTY();
+    TArray<TObjectPtr<AShipPart>> ShipParts;
+
     FVector mThrustVector = FVector::UnitZ();
     FVector mAimPosition = FVector::UnitX();
     float mThrust = 0.0f;

@@ -111,7 +111,7 @@ void APhysCharacterPawn::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActo
 
 FVector APhysCharacterPawn::GetAcceleration() const
 {
-    return PhysCharacterMovement ? PhysCharacterMovement->Acceleration : FVector::Zero();
+    return PhysCharacterMovement ? PhysCharacterMovement->GetAcceleration() : FVector::ZeroVector;
 }
 
 bool APhysCharacterPawn::IsFalling() const

@@ -32,10 +32,11 @@ public:
     UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
-    UFUNCTION()
-    void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-    UFUNCTION()
-    void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+#if WITH_EDITORONLY_DATA
+    /** Component shown in the editor only to indicate character facing */
+    UPROPERTY()
+    TObjectPtr<UArrowComponent> ArrowComponent;
+#endif
 
     UFUNCTION(BlueprintCallable, Category = "Transformation")
     virtual FVector GetAcceleration() const;
@@ -43,15 +44,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Transformation")
     virtual bool IsFalling() const;
 
+    UFUNCTION()
+    void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+    UFUNCTION()
+    void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
     void Interact(APlayerController* playerController);
 
-#if WITH_EDITORONLY_DATA
-    /** Component shown in the editor only to indicate character facing */
-    UPROPERTY()
-    TObjectPtr<UArrowComponent> ArrowComponent;
-#endif
-
 protected:
-    UPROPERTY()
     TWeakObjectPtr<AShipPart> OverlappedShipPart;
 };
