@@ -22,23 +22,24 @@ void AShipPawn::BeginPlay()
 
     FActorSpawnParameters spawnParams;
     spawnParams.bNoFail = true;
-    Bridge = world->SpawnActor<ABridgeShipPart>(BridgeClass, spawnParams);
-
-    Bridge->SetActorTransform(GetActorTransform());
+    Bridge = world->SpawnActor<ABridgeShipPart>(BridgeClass, GetActorTransform(), spawnParams);
     Bridge->SetShip(this);
-    SetActorTransform(FTransform::Identity);
-    RootComponent->AttachToComponent(Bridge->MainBody, FAttachmentTransformRules::KeepRelativeTransform);
 
-    AShipPart* top = world->SpawnActor<AShipPart>(TopPartClass, spawnParams);
-    top->Attach(FVector(0.f, 0.f, 220.0f), Bridge, this);
+    RootComponent->AttachToComponent(Bridge->MainBody, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+    AShipPart* top = world->SpawnActor<AShipPart>(TopPartClass, Bridge->GetActorLocation() + FVector(0.f, 0.f, 220.0f), Bridge->GetActorRotation(), spawnParams);
+    top->Attach(Bridge);
+    top->SetShip(this);
     ShipParts.Add(top);
 
-    AShipPart* left = world->SpawnActor<AShipPart>(SidePartClass, spawnParams);
-    left->Attach(FVector(-220.0f, 0.f, 0.f), Bridge, this);
+    AShipPart* left = world->SpawnActor<AShipPart>(SidePartClass, Bridge->GetActorLocation() + FVector(-220.0f, 0.f, 0.f), Bridge->GetActorRotation(), spawnParams);
+    left->Attach(Bridge);
+    left->SetShip(this);
     ShipParts.Add(left);
 
-    AShipPart* right = world->SpawnActor<AShipPart>(SidePartClass, spawnParams);
-    right->Attach(FVector(220.0f, 0.f, 0.f), Bridge, this);
+    AShipPart* right = world->SpawnActor<AShipPart>(SidePartClass, Bridge->GetActorLocation() + FVector(220.0f, 0.f, 0.f), Bridge->GetActorRotation(), spawnParams);
+    right->Attach(Bridge);
+    right->SetShip(this);
     ShipParts.Add(right);
 
     AutoPilot();

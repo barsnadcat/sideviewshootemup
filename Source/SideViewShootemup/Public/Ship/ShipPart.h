@@ -23,11 +23,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
     TObjectPtr<UPhysicsConstraintComponent> Constraint;
 
-    void Attach(FVector pos, AShipPart* parent, AShipPawn* ship);
+    void Attach(AShipPart* parent);
     virtual void Interact(APlayerController* playerController) {}
     void SetShip(AShipPawn* ship);
 
 protected:
     TWeakObjectPtr<AShipPawn> Ship;
-    virtual void OnAttach(AShipPawn* ship) {}
+    virtual void OnSetShip(AShipPawn* ship) {}
 };

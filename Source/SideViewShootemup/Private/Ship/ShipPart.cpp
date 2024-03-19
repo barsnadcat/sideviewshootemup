@@ -8,21 +8,18 @@ AShipPart::AShipPart()
     MainBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBody"));
     RootComponent = MainBody;
     Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("Constraint"));
+    Constraint->SetupAttachment(MainBody);
 }
 
-void AShipPart::Attach(FVector pos, AShipPart* parent, AShipPawn* ship)
+void AShipPart::Attach(AShipPart* parent)
 {
-    check(ship);
-    Ship = ship;
-    MainBody->SetRelativeLocation(pos);
-    MainBody->AttachToComponent(parent->MainBody, FAttachmentTransformRules::KeepRelativeTransform);
     Constraint->ConstraintActor1 = this;
     Constraint->ConstraintActor2 = parent;
     Constraint->InitComponentConstraint();
-    OnAttach(ship);
 }
 
 inline void AShipPart::SetShip(AShipPawn* ship)
 {
     Ship = ship;
+    OnSetShip(ship);
 }

@@ -23,6 +23,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
     TSubclassOf<AShipAIController> ShipAIControllerClass;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
+    TObjectPtr<UPhysicsConstraintComponent> PawnConstraint;
+
     virtual void Interact(APlayerController* playerController) override;
     AShipAIController* GetAutoPilot() { return ShipAutoPilot; }
 

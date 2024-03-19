@@ -9,7 +9,7 @@ AEngineShipPart::AEngineShipPart()
     Axis->SetupAttachment(MainBody);
 }
 
-void AEngineShipPart::OnAttach(AShipPawn* ship)
+void AEngineShipPart::OnSetShip(AShipPawn* ship)
 {
     ship->UpdateThrust.AddUObject(this, &AEngineShipPart::OnUpdateThrust);
 }
