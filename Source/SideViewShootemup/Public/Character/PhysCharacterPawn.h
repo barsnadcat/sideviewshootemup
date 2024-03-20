@@ -9,6 +9,7 @@ class UCapsuleComponent;
 class UPhysCharacterMovementComponent;
 class UArrowComponent;
 class USkeletalMeshComponent;
+class UPhysicsConstraintComponent;
 class AShipPart;
 class APlayerController;
 
@@ -32,6 +33,9 @@ public:
     UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
+    TObjectPtr<UPhysicsConstraintComponent> Constraint;
+
 #if WITH_EDITORONLY_DATA
     /** Component shown in the editor only to indicate character facing */
     UPROPERTY()
@@ -50,6 +54,8 @@ public:
     void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
     void Interact(APlayerController* playerController);
+    void Attach(AShipPart* part);
+    void Detach();
 
 protected:
     TWeakObjectPtr<AShipPart> OverlappedShipPart;

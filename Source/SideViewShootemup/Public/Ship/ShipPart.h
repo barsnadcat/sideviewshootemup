@@ -2,12 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PhysicsEngine/PhysicsConstraintComponent.h"
 
 #include "ShipPart.generated.h"
 
 class AShipPawn;
 class APlayerController;
+class UPhysicsConstraintComponent;
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor

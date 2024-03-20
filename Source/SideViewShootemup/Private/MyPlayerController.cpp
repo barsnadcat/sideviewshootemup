@@ -114,6 +114,7 @@ void AMyPlayerController::OnCancelInteractionTriggered()
     if (AShipPawn* ship = GetPawn<AShipPawn>())
     {
         ship->AutoPilot();
+        DefaultPawn->Detach();
         Possess(DefaultPawn);
     }
 }

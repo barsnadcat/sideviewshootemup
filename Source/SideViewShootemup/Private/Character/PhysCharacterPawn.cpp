@@ -6,6 +6,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Ship/ShipPart.h"
 #include "SideViewShootemup/SideViewShootemup.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 
 APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
@@ -48,6 +49,9 @@ APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializ
     {
         PhysCharacterMovement->UpdatedComponent = CapsuleComponent;
     }
+
+    Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("Constraint"));
+    Constraint->SetupAttachment(CapsuleComponent);
 
 #if WITH_EDITORONLY_DATA
     ArrowComponent = CreateEditorOnlyDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
@@ -125,4 +129,16 @@ void APhysCharacterPawn::Interact(APlayerController* playerController)
     {
         part->Interact(playerController);
     }
+}
+
+void APhysCharacterPawn::Attach(AShipPart* part)
+{
+    Constraint->ConstraintActor1 = this;
+    Constraint->ConstraintActor2 = part;
+    Constraint->InitComponentConstraint();
+}
+
+void APhysCharacterPawn::Detach()
+{
+    Constraint->BreakConstraint();
 }

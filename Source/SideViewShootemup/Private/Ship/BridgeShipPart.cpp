@@ -3,6 +3,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Ship/ShipPawn.h"
 #include "ShipAIController.h"
+#include "Character/PhysCharacterPawn.h"
 
 ABridgeShipPart::ABridgeShipPart()
 {
@@ -25,6 +26,11 @@ void ABridgeShipPart::Interact(APlayerController* playerController)
 {
     if (AShipPawn* ship = Ship.Get())
     {
+        APhysCharacterPawn* pawn = playerController->GetPawn<APhysCharacterPawn>();
+        if (pawn)
+        {
+            pawn->Attach(this);
+        }
         check(playerController);
         playerController->Possess(ship);
     }

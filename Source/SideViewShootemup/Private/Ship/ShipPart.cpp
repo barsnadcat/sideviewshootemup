@@ -1,6 +1,7 @@
 #include "Ship/ShipPart.h"
 
 #include "Ship/ShipPawn.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 
 AShipPart::AShipPart()
 {
