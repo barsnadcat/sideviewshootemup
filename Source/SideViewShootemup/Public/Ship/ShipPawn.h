@@ -7,8 +7,9 @@
 
 class AShipPart;
 class ABridgeShipPart;
+class AShipConstraint;
 
-DECLARE_MULTICAST_DELEGATE_FourParams(FGenerateThrust, UPrimitiveComponent*, const FVector&, double, float);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FGenerateThrust, const FVector&, double, float);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector&, float);
 DECLARE_MULTICAST_DELEGATE(FShoot);
 
@@ -30,6 +31,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
     TSubclassOf<AShipPart> TopPartClass;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
+    TSubclassOf<AShipConstraint> ConstraintClass;
+
     FGenerateThrust UpdateThrust;
     FUpdateAimTarget UpdateAimTarget;
     FShoot Shoot;
@@ -44,11 +48,10 @@ public:
     void AutoPilot();
 
 private:
-    UPROPERTY();
-    TObjectPtr<ABridgeShipPart> Bridge;
+    void Attach(AShipPart* parent, AShipPart* child);
 
     UPROPERTY();
-    TArray<TObjectPtr<AShipPart>> ShipParts;
+    TObjectPtr<ABridgeShipPart> Bridge;
 
     FVector mThrustVector = FVector::UnitZ();
     FVector mAimPosition = FVector::UnitX();

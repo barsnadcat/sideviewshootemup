@@ -24,7 +24,7 @@ void ABridgeShipPart::BeginPlay()
 
 void ABridgeShipPart::Interact(APlayerController* playerController)
 {
-    if (AShipPawn* ship = Ship.Get())
+    if (AShipPawn* ship = GetOwner<AShipPawn>())
     {
         APhysCharacterPawn* pawn = playerController->GetPawn<APhysCharacterPawn>();
         if (pawn)

@@ -20,14 +20,5 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UStaticMeshComponent> MainBody;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
-    TObjectPtr<UPhysicsConstraintComponent> Constraint;
-
-    void Attach(AShipPart* parent);
     virtual void Interact(APlayerController* playerController) {}
-    void SetShip(AShipPawn* ship);
-
-protected:
-    TWeakObjectPtr<AShipPawn> Ship;
-    virtual void OnSetShip(AShipPawn* ship) {}
 };

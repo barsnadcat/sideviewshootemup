@@ -29,8 +29,8 @@ public:
     double RPM = 180.f;
 
 private:
+    virtual void PostActorCreated() override;
     void OnUpdateAimTarget(const FVector& target, float deltaTime);
     void OnShoot();
-    virtual void OnSetShip(AShipPawn* ship) override;
     double mLastShootSeconds = 0.0f;
 };

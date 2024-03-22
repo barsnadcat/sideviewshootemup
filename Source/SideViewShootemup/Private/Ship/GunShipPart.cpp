@@ -12,6 +12,15 @@ AGunShipPart::AGunShipPart()
     GunMuzzle->SetupAttachment(Axis);
 }
 
+void AGunShipPart::PostActorCreated()
+{
+    if (AShipPawn* ship = GetOwner<AShipPawn>())
+    {
+        ship->UpdateAimTarget.AddUObject(this, &AGunShipPart::OnUpdateAimTarget);
+        ship->Shoot.AddUObject(this, &AGunShipPart::OnShoot);
+    }
+}
+
 void AGunShipPart::OnUpdateAimTarget(const FVector& target, float deltaTime)
 {
     if (target.IsNearlyZero())
@@ -45,10 +54,4 @@ void AGunShipPart::OnShoot()
     // Spawn the projectile at the muzzle
     world->SpawnActor(ProjectileClass, &GunMuzzle->GetComponentTransform(), ActorSpawnParams);
     mLastShootSeconds = world->TimeSeconds;
-}
-
-void AGunShipPart::OnSetShip(AShipPawn* ship)
-{
-    ship->UpdateAimTarget.AddUObject(this, &AGunShipPart::OnUpdateAimTarget);
-    ship->Shoot.AddUObject(this, &AGunShipPart::OnShoot);
 }

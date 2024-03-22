@@ -23,6 +23,6 @@ public:
     TObjectPtr<UAxisComponent> Axis;
 
 private:
-    virtual void OnSetShip(AShipPawn* ship) override;
-    void OnUpdateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust, float deltaTime);
+    virtual void PostActorCreated() override;
+    void OnUpdateThrust(const FVector& vector, double thrust, float deltaTime);
 };

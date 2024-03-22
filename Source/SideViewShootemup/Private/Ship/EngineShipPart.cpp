@@ -9,19 +9,20 @@ AEngineShipPart::AEngineShipPart()
     Axis->SetupAttachment(MainBody);
 }
 
-void AEngineShipPart::OnSetShip(AShipPawn* ship)
+void AEngineShipPart::PostActorCreated()
 {
-    ship->UpdateThrust.AddUObject(this, &AEngineShipPart::OnUpdateThrust);
+    if (AShipPawn* ship = GetOwner<AShipPawn>())
+    {
+        ship->UpdateThrust.AddUObject(this, &AEngineShipPart::OnUpdateThrust);
+    }
 }
 
-void AEngineShipPart::OnUpdateThrust(UPrimitiveComponent* primitive, const FVector& vector, double thrust, float deltaTime)
+void AEngineShipPart::OnUpdateThrust(const FVector& vector, double thrust, float deltaTime)
 {
-    check(primitive);
-
     Axis->UpdateDirection(vector, deltaTime);
-
     if (thrust != 0.0f)
     {
-        primitive->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
+        
+        MainBody->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
     }
 }
