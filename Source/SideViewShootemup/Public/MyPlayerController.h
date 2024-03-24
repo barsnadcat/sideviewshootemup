@@ -54,6 +54,5 @@ private:
 
     FVector GetMouseWorldPosition(double planeY);
 
-    UPROPERTY()
     TObjectPtr<APhysCharacterPawn> DefaultPawn;
 };

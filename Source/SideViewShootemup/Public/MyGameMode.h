@@ -26,6 +26,5 @@ public:
     virtual void BeginPlay() override;
 
 private:
-    UPROPERTY()
     TObjectPtr<AShipPawn> ShipPawn;
 };

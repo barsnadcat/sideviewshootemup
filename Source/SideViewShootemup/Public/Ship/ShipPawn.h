@@ -50,7 +50,6 @@ public:
 private:
     void Attach(AShipPart* parent, AShipPart* child);
 
-    UPROPERTY();
     TObjectPtr<ABridgeShipPart> Bridge;
 
     FVector mThrustVector = FVector::UnitZ();

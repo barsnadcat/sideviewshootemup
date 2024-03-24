@@ -15,6 +15,8 @@ class SIDEVIEWSHOOTEMUP_API AGunProjectile : public AActor
 public:
     AGunProjectile();
 
+    virtual void BeginPlay() override;
+
     UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
     TObjectPtr<USphereComponent> CollisionComp;
 
@@ -22,5 +24,5 @@ public:
     TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
     UFUNCTION()
-    void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+    void HandleComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

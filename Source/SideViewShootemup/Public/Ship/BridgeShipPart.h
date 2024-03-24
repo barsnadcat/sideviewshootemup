@@ -32,6 +32,5 @@ public:
 private:
     virtual void BeginPlay();
 
-    UPROPERTY()
     TObjectPtr<AShipAIController> ShipAutoPilot;
 };

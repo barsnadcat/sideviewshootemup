@@ -20,6 +20,5 @@ public:
     virtual TStatId GetStatId() const override;
 
 private:
-    UPROPERTY()
     TObjectPtr<AShipPawn> Ship;
 };
