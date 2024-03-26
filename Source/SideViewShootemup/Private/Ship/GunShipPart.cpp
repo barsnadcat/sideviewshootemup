@@ -50,7 +50,7 @@ void AGunShipPart::OnShoot()
 
     FActorSpawnParameters spawnParams;
     spawnParams.Owner = GetOwner();
-    spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+    spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
     // Spawn the projectile at the muzzle
     world->SpawnActor(ProjectileClass, &GunMuzzle->GetComponentTransform(), spawnParams);
