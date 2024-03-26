@@ -30,10 +30,11 @@ AGunProjectile::AGunProjectile()
 void AGunProjectile::BeginPlay()
 {
     Super::BeginPlay();
-    CollisionComp->OnComponentHit.AddDynamic(this, &AGunProjectile::HandleComponentHit);    // set up a notification for when this component hits something blocking
+    //CollisionComp->OnComponentHit.AddDynamic(this, &AGunProjectile::HandleComponentHit);    // set up a notification for when this component hits something blocking
+    CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AGunProjectile::HandleComponentBeginOverlap);
 }
-
-void AGunProjectile::HandleComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+//void AGunProjectile::HandleComponentHit(UPrimitiveComponent* HitComp, AActor* otherActor, UPrimitiveComponent* otherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AGunProjectile::HandleComponentBeginOverlap(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult)
 {
     /* UE_LOG(Game, Display, TEXT("HandleComponentHit: comp:%s other:%s othercomp:%s normal:%s result:%d"),
         HitComp ? *HitComp->GetFName().ToString() : TEXT("null"),
@@ -41,10 +42,14 @@ void AGunProjectile::HandleComponentHit(UPrimitiveComponent* HitComp, AActor* Ot
         OtherComp ? *OtherComp->GetFName().ToString() : TEXT("null"), *NormalImpulse.ToString(), Hit.bBlockingHit);*/
 
     // Only add impulse and destroy projectile if we hit a physics
-    if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+    if (otherActor == nullptr || otherComp == nullptr || otherActor == this || otherActor->GetOwner() == GetOwner())
     {
-        OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+        return;
+    }
 
+    if (otherComp->IsSimulatingPhysics())
+    {
+        otherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
         Destroy();
     }
 }

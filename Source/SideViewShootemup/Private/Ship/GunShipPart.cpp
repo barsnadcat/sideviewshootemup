@@ -48,10 +48,11 @@ void AGunShipPart::OnShoot()
         return;
     }
 
-    FActorSpawnParameters ActorSpawnParams;
-    ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+    FActorSpawnParameters spawnParams;
+    spawnParams.Owner = GetOwner();
+    spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
     // Spawn the projectile at the muzzle
-    world->SpawnActor(ProjectileClass, &GunMuzzle->GetComponentTransform(), ActorSpawnParams);
+    world->SpawnActor(ProjectileClass, &GunMuzzle->GetComponentTransform(), spawnParams);
     mLastShootSeconds = world->TimeSeconds;
 }
