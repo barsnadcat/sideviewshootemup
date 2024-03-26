@@ -1,5 +1,6 @@
 #include "GunProjectile.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "SideViewShootemup/SideViewShootemup.h"
 
 AGunProjectile::AGunProjectile()
@@ -30,10 +31,9 @@ AGunProjectile::AGunProjectile()
 void AGunProjectile::BeginPlay()
 {
     Super::BeginPlay();
-    //CollisionComp->OnComponentHit.AddDynamic(this, &AGunProjectile::HandleComponentHit);    // set up a notification for when this component hits something blocking
     CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AGunProjectile::HandleComponentBeginOverlap);
 }
-//void AGunProjectile::HandleComponentHit(UPrimitiveComponent* HitComp, AActor* otherActor, UPrimitiveComponent* otherComp, FVector NormalImpulse, const FHitResult& Hit)
+
 void AGunProjectile::HandleComponentBeginOverlap(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult)
 {
     /* UE_LOG(Game, Display, TEXT("HandleComponentHit: comp:%s other:%s othercomp:%s normal:%s result:%d"),
@@ -46,6 +46,9 @@ void AGunProjectile::HandleComponentBeginOverlap(UPrimitiveComponent* overlapped
     {
         return;
     }
+
+    APawn* ownerPawn = GetOwner<APawn>();
+    UGameplayStatics::ApplyPointDamage(otherActor, Damage, ProjectileMovement->Velocity, sweepResult, ownerPawn ? ownerPawn->Controller : nullptr, this, nullptr);
 
     if (otherComp->IsSimulatingPhysics())
     {

@@ -8,6 +8,7 @@
 class AShipPawn;
 class APlayerController;
 class UPhysicsConstraintComponent;
+class UHealthComponent;
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor
@@ -19,6 +20,10 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UStaticMeshComponent> MainBody;
+
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    TObjectPtr<UHealthComponent> Health;
 
     virtual void Interact(APlayerController* playerController) {}
 };

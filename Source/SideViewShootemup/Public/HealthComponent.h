@@ -13,6 +13,11 @@ class SIDEVIEWSHOOTEMUP_API UHealthComponent : public UActorComponent
 public:
     UHealthComponent();
 
+    virtual void BeginPlay() override;
+
+    UFUNCTION()
+    void HandleTakeAnyDamage(AActor* damagedActor, float damage, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser);
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game);
     int Health = 100;
 

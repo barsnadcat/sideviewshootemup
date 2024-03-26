@@ -23,7 +23,9 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
+    UPROPERTY(EditAnywhere, Category = Projectile)
+    double Damage = 40.f;
+
     UFUNCTION()
     void HandleComponentBeginOverlap(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
-    //void HandleComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };
