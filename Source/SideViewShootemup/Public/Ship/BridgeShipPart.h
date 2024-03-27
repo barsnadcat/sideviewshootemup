@@ -30,7 +30,8 @@ public:
     AShipAIController* GetAutoPilot() { return ShipAutoPilot; }
 
 private:
-    virtual void BeginPlay();
+    virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type endPlayReason) override;
 
     TObjectPtr<AShipAIController> ShipAutoPilot;
 };

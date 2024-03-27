@@ -22,6 +22,15 @@ void ABridgeShipPart::BeginPlay()
     ShipAutoPilot = GetWorld()->SpawnActor<AShipAIController>(ShipAIControllerClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnInfo);
 }
 
+void ABridgeShipPart::EndPlay(const EEndPlayReason::Type endPlayReason)
+{
+    Super::EndPlay(endPlayReason);
+    if (ShipAutoPilot)
+    {
+        ShipAutoPilot->Destroy();
+    }
+}
+
 void ABridgeShipPart::Interact(APlayerController* playerController)
 {
     if (AShipPawn* ship = GetOwner<AShipPawn>())
