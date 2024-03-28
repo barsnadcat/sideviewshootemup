@@ -34,5 +34,5 @@ private:
     void AddWeld(AShipPart* otherShip, TSharedPtr<FConstraintInstance> weld);
     void RemoveWeld(AShipPart* otherShipPart);
 
-    TMap<AShipPart*, TSharedPtr<FConstraintInstance>> welds;
+    TMap<TObjectPtr<AShipPart>, TSharedPtr<FConstraintInstance>> welds;
 };

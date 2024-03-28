@@ -17,9 +17,9 @@ void AShipPart::EndPlay(const EEndPlayReason::Type endPlayReason)
 {
     Super::EndPlay(endPlayReason);
 
-    for (const TPair<AShipPart*, TSharedPtr<FConstraintInstance>>& pair : welds)
+    for (const TPair<TObjectPtr<AShipPart>, TSharedPtr<FConstraintInstance>>& pair : welds)
     {
-        if (IsValid(pair.Key))
+        if (pair.Key)
         {
             pair.Key->RemoveWeld(this);
         }
@@ -45,6 +45,10 @@ void AShipPart::RemoveWeld(AShipPart* otherShipPart)
 
 void AShipPart::Weld(AShipPart* p1, AShipPart* p2)
 {
+    check(p1);
+    check(p2);
+    check(p1 != p2);
+
     TSharedPtr<FConstraintInstance> weld = MakeShared<FConstraintInstance>();
 
     weld->ProfileInstance.bDisableCollision = true;
