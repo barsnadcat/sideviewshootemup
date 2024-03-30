@@ -12,7 +12,12 @@
 				"Engine",
 				"AIModule"
 			]
-		}
+		},
+    {
+      "Name": "SideViewShootemupEditor",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
+    }
 	],
 	"Plugins": [
 		{
