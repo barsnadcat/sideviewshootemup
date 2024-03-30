@@ -10,14 +10,18 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"AIModule"
+				"AIModule",
+				"CoreUObject"
 			]
 		},
-    {
-      "Name": "SideViewShootemupEditor",
-      "Type": "Editor",
-      "LoadingPhase": "Default"
-    }
+		{
+			"Name": "SideViewShootemupEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"UnrealEd"
+			]
+		}
 	],
 	"Plugins": [
 		{
