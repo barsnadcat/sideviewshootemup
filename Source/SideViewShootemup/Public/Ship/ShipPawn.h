@@ -7,6 +7,7 @@
 
 class AShipPart;
 class ABridgeShipPart;
+class UShipDesign;
 
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FGenerateThrust, const FVector&, double, float);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector&, float);
@@ -18,17 +19,10 @@ class SIDEVIEWSHOOTEMUP_API AShipPawn : public APawn
     GENERATED_BODY()
 
 public:
-    // Sets default values for this pawn's properties
     AShipPawn();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
-    TSubclassOf<ABridgeShipPart> BridgeClass;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
-    TSubclassOf<AShipPart> SidePartClass;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
-    TSubclassOf<AShipPart> TopPartClass;
+    UPROPERTY(EditAnywhere)
+    TObjectPtr<UShipDesign> ShipDesign;
 
     FGenerateThrust UpdateThrust;
     FUpdateAimTarget UpdateAimTarget;
@@ -44,6 +38,8 @@ public:
     void AutoPilot();
 
 private:
+    void ConstructShip();
+
     TObjectPtr<ABridgeShipPart> Bridge;
 
     FVector mThrustVector = FVector::UnitZ();

@@ -2,6 +2,7 @@
 
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/BridgeShipPart.h"
+#include "Ship/ShipDesign.h"
 #include "Ship/ShipPart.h"
 #include "ShipAIController.h"
 #include "SideViewShootemup/SideViewShootemup.h"
@@ -15,31 +16,72 @@ AShipPawn::AShipPawn()
 void AShipPawn::BeginPlay()
 {
     Super::BeginPlay();
-    UWorld* world = GetWorld();
-    if (!world || !BridgeClass || !SidePartClass || !TopPartClass)
-    {
-        return;
-    }
-
-    FActorSpawnParameters spawnParams;
-    spawnParams.bNoFail = true;
-    spawnParams.Owner = this;
-    Bridge = world->SpawnActor<ABridgeShipPart>(BridgeClass, GetActorTransform(), spawnParams);
-
-    RootComponent->AttachToComponent(Bridge->MainBody, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-
-    AShipPart* top = world->SpawnActor<AShipPart>(TopPartClass, Bridge->GetActorLocation() + FVector(0.f, 0.f, 220.0f), Bridge->GetActorRotation(), spawnParams);
-    AShipPart::Weld(Bridge, top);
-
-    AShipPart* left = world->SpawnActor<AShipPart>(SidePartClass, Bridge->GetActorLocation() + FVector(-220.0f, 0.f, 0.f), Bridge->GetActorRotation(), spawnParams);
-    AShipPart::Weld(Bridge, left);
-
-    AShipPart* right = world->SpawnActor<AShipPart>(SidePartClass, Bridge->GetActorLocation() + FVector(220.0f, 0.f, 0.f), Bridge->GetActorRotation(), spawnParams);
-    AShipPart::Weld(Bridge, right);
-
+    ConstructShip();
     AutoPilot();
 }
 
+void AShipPawn::ConstructShip()
+{
+    check(ShipDesign);
+    UWorld* world = GetWorld();
+    check(world);
+
+    // Spawn parts
+    FActorSpawnParameters spawnParams;
+    spawnParams.bNoFail = true;
+    spawnParams.Owner = this;
+
+    TArray<TArray<AShipPart*>> parts;
+    parts.SetNum(ShipDesign->X.Num());
+    for (int x = 0; x < ShipDesign->X.Num(); x++)
+    {
+        const auto& designRow = ShipDesign->X[x].Y;
+        auto& partsRow = parts[x];
+        partsRow.SetNum(designRow.Num());
+
+        for (int y = 0; y < designRow.Num(); y++)
+        {
+            TSubclassOf<AShipPart> partClass = designRow[y];
+            if (partClass)
+            {
+                FVector partPos = GetActorLocation() + FVector(y * -ShipDesign->GridSize, 0.f, x * ShipDesign->GridSize);
+                partsRow[y] = world->SpawnActor<AShipPart>(partClass, partPos, FRotator::ZeroRotator, spawnParams);
+                if (ABridgeShipPart* bridgePart = Cast<ABridgeShipPart>(partsRow[y]))
+                {
+                    Bridge = bridgePart;
+                }
+            }
+        }
+    }
+
+    // Weld parts
+    for (int x = 0; x < parts.Num(); x++)
+    {
+        auto& partsRow = parts[x];
+        for (int y = 0; y < partsRow.Num(); y++)
+        {
+            if (AShipPart* part = partsRow[y])
+            {
+                if (y > 0)
+                {
+                    AShipPart::Weld(part, partsRow[y - 1]);
+                }
+                if (y + 1 < parts.Num())
+                {
+                    AShipPart::Weld(part, partsRow[y + 1]);
+                }
+                if (x > 0)
+                {
+                    AShipPart::Weld(part, parts[x - 1][y]);
+                }
+                if (x + 1 < parts.Num())
+                {
+                    AShipPart::Weld(part, parts[x + 1][y]);
+                }
+            }
+        }
+    }
+}
 
 void AShipPawn::Tick(float DeltaTime)
 {

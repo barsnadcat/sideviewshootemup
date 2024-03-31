@@ -45,8 +45,10 @@ void AShipPart::RemoveWeld(AShipPart* otherShipPart)
 
 void AShipPart::Weld(AShipPart* p1, AShipPart* p2)
 {
-    check(p1);
-    check(p2);
+    if (!p1 || !p2)
+    {
+        return;
+    }
     check(p1 != p2);
 
     TSharedPtr<FConstraintInstance> weld = MakeShared<FConstraintInstance>();

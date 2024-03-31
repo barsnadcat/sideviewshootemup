@@ -20,6 +20,9 @@ public:
     TSubclassOf<APawn> ShipPawnClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
+    TSubclassOf<APawn> EnemyShipPawnClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
     TSubclassOf<AShipAIController> ShipAIControllerClass;
 
     virtual APawn* SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform) override;

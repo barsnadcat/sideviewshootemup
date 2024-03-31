@@ -12,7 +12,7 @@ void UEnemySpawner::OnWorldBeginPlay(UWorld& InWorld)
         FActorSpawnParameters SpawnInfo;
         SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
         SpawnInfo.ObjectFlags |= RF_Transient;
-        Ship = InWorld.SpawnActor<AShipPawn>(gameMode->ShipPawnClass, {1000, 0, 500}, FRotator::ZeroRotator, SpawnInfo);
+        Ship = InWorld.SpawnActor<AShipPawn>(gameMode->EnemyShipPawnClass, {1000, 0, 500}, FRotator::ZeroRotator, SpawnInfo);
     }
 }
 
