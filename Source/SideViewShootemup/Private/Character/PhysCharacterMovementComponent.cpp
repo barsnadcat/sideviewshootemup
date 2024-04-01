@@ -65,6 +65,7 @@ bool UPhysCharacterMovementComponent::IsFalling() const
 
 void UPhysCharacterMovementComponent::UpdatetOrientation(const FVector& v)
 {
+    return;
     FRotator orientation;
     if (v.X > 1.f)
     {
