@@ -55,11 +55,33 @@ void AShipPart::Weld(AShipPart* p1, AShipPart* p2)
 
     weld->ProfileInstance.bDisableCollision = true;
     weld->ProfileInstance.bEnableMassConditioning = false;
+    weld->ProfileInstance.bEnableShockPropagation = false;
+    weld->ProfileInstance.bLinearBreakable = false;
+    weld->ProfileInstance.bLinearPlasticity = false;
+    weld->ProfileInstance.bAngularBreakable = false;
+    weld->ProfileInstance.bAngularPlasticity = false;
+
+    weld->ProfileInstance.bEnableProjection = true;
+    weld->ProfileInstance.ProjectionLinearTolerance = 0.1f;
+    weld->ProfileInstance.ProjectionLinearAlpha = 0.0f;
+    weld->ProfileInstance.ProjectionAngularTolerance = 0.1f;
+    weld->ProfileInstance.ProjectionAngularAlpha = 0.0f;
+
+    weld->ProfileInstance.ContactTransferScale = 1.0f;
+
+    weld->ProfileInstance.LinearLimit.bSoftConstraint = false;
+    weld->ProfileInstance.LinearLimit.Limit = 0.0f;
+    weld->ProfileInstance.LinearLimit.ContactDistance = 50.0f;
+    weld->ProfileInstance.LinearLimit.Restitution = 1.0f;
     weld->ProfileInstance.LinearLimit.XMotion = ELinearConstraintMotion::LCM_Locked;
     weld->ProfileInstance.LinearLimit.YMotion = ELinearConstraintMotion::LCM_Locked;
     weld->ProfileInstance.LinearLimit.ZMotion = ELinearConstraintMotion::LCM_Locked;
+
+    weld->ProfileInstance.ConeLimit.bSoftConstraint = false;
     weld->ProfileInstance.ConeLimit.Swing1Motion = EAngularConstraintMotion::ACM_Locked;
     weld->ProfileInstance.ConeLimit.Swing2Motion = EAngularConstraintMotion::ACM_Locked;
+
+    weld->ProfileInstance.TwistLimit.bSoftConstraint = false;
     weld->ProfileInstance.TwistLimit.TwistMotion = EAngularConstraintMotion::ACM_Locked;
 
     const FVector pos = (p1->GetActorLocation() - p2->GetActorLocation()) * 0.5f + p2->GetActorLocation();
