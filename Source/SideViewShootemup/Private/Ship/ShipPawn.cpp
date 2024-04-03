@@ -66,17 +66,9 @@ void AShipPawn::ConstructShip()
                 {
                     AShipPart::Weld(part, partsRow[y - 1]);
                 }
-                if (y + 1 < parts.Num())
-                {
-                    AShipPart::Weld(part, partsRow[y + 1]);
-                }
                 if (x > 0)
                 {
                     AShipPart::Weld(part, parts[x - 1][y]);
-                }
-                if (x + 1 < parts.Num())
-                {
-                    AShipPart::Weld(part, parts[x + 1][y]);
                 }
             }
         }
