@@ -53,6 +53,6 @@ void AGunProjectile::HandleComponentBeginOverlap(UPrimitiveComponent* overlapped
     if (otherComp->IsSimulatingPhysics())
     {
         otherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-        Destroy();
     }
+    Destroy();
 }
