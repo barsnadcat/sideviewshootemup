@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Components/BoxComponent.h"
 #include "CoreMinimal.h"
 #include "Ship/ShipPart.h"
 
@@ -16,9 +15,6 @@ class SIDEVIEWSHOOTEMUP_API ABridgeShipPart : public AShipPart
     GENERATED_BODY()
 public:
     ABridgeShipPart();
-
-    UPROPERTY(EditAnywhere)
-    TObjectPtr<UBoxComponent> BoxCollisionComponent;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
     TSubclassOf<AShipAIController> ShipAIControllerClass;

@@ -1,5 +1,6 @@
 #include "Ship/ShipPart.h"
 
+#include "Components/BoxComponent.h"
 #include "HealthComponent.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/ShipPawn.h"
@@ -11,6 +12,11 @@ AShipPart::AShipPart()
     MainBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBody"));
     RootComponent = MainBody;
     Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
+
+    BoxCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+    BoxCollisionComponent->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
+    BoxCollisionComponent->SetCollisionProfileName(TEXT("Trigger"));
+    BoxCollisionComponent->SetupAttachment(RootComponent);
 }
 
 void AShipPart::EndPlay(const EEndPlayReason::Type endPlayReason)

@@ -62,17 +62,22 @@ void AShipPawn::ConstructShip()
         {
             if (AShipPart* part = partsRow[y])
             {
-                if (y > 0)
+                if (part != Bridge)
+                {
+                    part->MainBody->AttachToComponent(Bridge->MainBody, {EAttachmentRule::KeepWorld, true});
+                }
+                /*if (y > 0)
                 {
                     AShipPart::Weld(part, partsRow[y - 1]);
                 }
                 if (x > 0)
                 {
                     AShipPart::Weld(part, parts[x - 1][y]);
-                }
+                }*/
             }
         }
     }
+    UE_LOG(Game, Display, TEXT("Children %d"), Bridge->MainBody->GetAttachChildren().Num());
 }
 
 void AShipPawn::Tick(float DeltaTime)

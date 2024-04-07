@@ -9,6 +9,7 @@ class AShipPawn;
 class APlayerController;
 class UPhysicsConstraintComponent;
 class UHealthComponent;
+class UBoxComponent;
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor
@@ -17,6 +18,9 @@ class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor
 
 public:
     AShipPart();
+
+    UPROPERTY(EditAnywhere)
+    TObjectPtr<UBoxComponent> BoxCollisionComponent;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UStaticMeshComponent> MainBody;
