@@ -1,6 +1,7 @@
 #include "HealthComponent.h"
 
 #include "SideViewShootemup/SideViewShootemup.h"
+#include "Ship/ShipPart.h"
 
 UHealthComponent::UHealthComponent()
 {
@@ -28,6 +29,10 @@ void UHealthComponent::HandleTakeAnyDamage(AActor* damagedActor, float damage, c
     {
         UE_LOG(Game, Display, TEXT("%s died"),
             damagedActor ? *damagedActor->GetFName().ToString() : TEXT("null"));
+        if (AShipPart* part = GetOwner<AShipPart>())
+        {
+            part->BreakAndReweldShip();
+        }
         GetOwner()->Destroy();
     }
 }

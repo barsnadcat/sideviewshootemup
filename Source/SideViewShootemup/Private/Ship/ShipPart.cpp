@@ -5,9 +5,12 @@
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/ShipPawn.h"
 #include "SideViewShootemup/SideViewShootemup.h"
+#include <map>
 
 AShipPart::AShipPart()
 {
+    Connections.SetNum(CI_Size);
+
     PrimaryActorTick.bCanEverTick = false;
     MainBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBody"));
     RootComponent = MainBody;
@@ -22,85 +25,144 @@ AShipPart::AShipPart()
 void AShipPart::EndPlay(const EEndPlayReason::Type endPlayReason)
 {
     Super::EndPlay(endPlayReason);
+}
 
-    for (const TPair<TObjectPtr<AShipPart>, TSharedPtr<FConstraintInstance>>& pair : welds)
+void AShipPart::BreakAndReweldShip()
+{
+    if (AShipPart* weldRoot = GetWeldRoot())
     {
-        if (pair.Key)
+        weldRoot->ConnectedToWeldRoot++;
+
+        Disconnect();
+
+        for (uint8 i = 0; i < CI_Size; i++)
         {
-            pair.Key->RemoveWeld(this);
-        }
-        if (pair.Value)
-        {
-            pair.Value->TermConstraint();
+            if (AShipPart* part = Connections[i].Get())
+            {
+                TSet<AShipPart*> parts;
+                if (!IsConnectedToWeldRoot(part, weldRoot, parts))
+                {
+                    ReWeld(parts);
+                }
+            }
+            Connections[i] = nullptr;
         }
     }
-    welds.Empty();
 }
 
-void AShipPart::AddWeld(AShipPart* otherShipPart, TSharedPtr<FConstraintInstance> weld)
+int32 AShipPart::Distance(AShipPart* a, AShipPart* b)
 {
-    check(otherShipPart);
-    welds.Add(otherShipPart, weld);
+    int32 rowDistance = a->Row - b->Row;
+    int32 colDistance = a->Column - b->Column;
+    return rowDistance * rowDistance + colDistance * colDistance;
 }
 
-void AShipPart::RemoveWeld(AShipPart* otherShipPart)
+bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<AShipPart*>& parts)
 {
-    check(otherShipPart);
-    welds.Remove(otherShipPart);
-}
+    std::multimap<int32, AShipPart*> openSet;
+    openSet.insert(std::make_pair(Distance(part, root), part));
 
-void AShipPart::Weld(AShipPart* p1, AShipPart* p2)
-{
-    if (!p1 || !p2)
+    while (!openSet.empty())
     {
-        return;
+        // Pop closest to the root
+        auto it = openSet.begin();
+        AShipPart* current = it->second;
+        openSet.erase(it);
+
+        // Connected to the root check
+        if (current->ConnectedToWeldRoot == root->ConnectedToWeldRoot)
+        {
+            // Caching path to the root
+            for (AShipPart* part : parts)
+            {
+                part->ConnectedToWeldRoot = root->ConnectedToWeldRoot;
+            }
+            for (auto& j : openSet)
+            {
+                j.second->ConnectedToWeldRoot = root->ConnectedToWeldRoot;
+            }
+            return true;
+        }
+        
+        // Look around
+        for (uint8 i = 0; i < CI_Size; i++)
+        {
+            if (AShipPart* n = current->Connections[i].Get())
+            {
+                if (!parts.Contains(n))
+                {
+                    openSet.insert(std::make_pair(Distance(n, root), n));
+                }
+            }
+        }
+
+        parts.Add(current);
     }
-    check(p1 != p2);
 
-    TSharedPtr<FConstraintInstance> weld = MakeShared<FConstraintInstance>();
+    return false;
+}
 
-    weld->ProfileInstance.bDisableCollision = true;
-    weld->ProfileInstance.bEnableMassConditioning = false;
-    weld->ProfileInstance.bEnableShockPropagation = false;
-    weld->ProfileInstance.bLinearBreakable = false;
-    weld->ProfileInstance.bLinearPlasticity = false;
-    weld->ProfileInstance.bAngularBreakable = false;
-    weld->ProfileInstance.bAngularPlasticity = false;
+AShipPart* AShipPart::GetWeldRoot()
+{
+    FBodyInstance* bodyInstance = MainBody->GetBodyInstance();
+    check(bodyInstance);
+    UPrimitiveComponent* ownerComponent = bodyInstance->OwnerComponent.Get();
+    check(ownerComponent);
+    return ownerComponent->GetOwner<AShipPart>();
+}
 
-    weld->ProfileInstance.bEnableProjection = true;
-    weld->ProfileInstance.ProjectionLinearTolerance = 0.1f;
-    weld->ProfileInstance.ProjectionLinearAlpha = 0.0f;
-    weld->ProfileInstance.ProjectionAngularTolerance = 0.1f;
-    weld->ProfileInstance.ProjectionAngularAlpha = 0.0f;
+void AShipPart::ReWeld(TSet<AShipPart*>& parts)
+{
+    AShipPart* newRoot = nullptr;
+    for (AShipPart* part : parts)
+    {
+        if (!newRoot)
+        {
+            newRoot = part;
+            newRoot->MainBody->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+        }
+        else
+        {
+            part->MainBody->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            part->MainBody->AttachToComponent(newRoot->MainBody, {EAttachmentRule::KeepWorld, true});
+        }
+    }
+}
 
-    weld->ProfileInstance.ContactTransferScale = 1.0f;
+void AShipPart::Disconnect()
+{
+    if (AShipPart* top = Connections[CI_Top].Get())
+    {
+        top->Connections[CI_Bottom] = nullptr;
+    }
+    if (AShipPart* right = Connections[CI_Right].Get())
+    {
+        right->Connections[CI_Left] = nullptr;
+    }
+    if (AShipPart* bottom = Connections[CI_Bottom].Get())
+    {
+        bottom->Connections[CI_Top] = nullptr;
+    }
+    if (AShipPart* left = Connections[CI_Left].Get())
+    {
+        left->Connections[CI_Right] = nullptr;
+    }
+}
 
-    weld->ProfileInstance.LinearLimit.bSoftConstraint = false;
-    weld->ProfileInstance.LinearLimit.Limit = 0.0f;
-    weld->ProfileInstance.LinearLimit.ContactDistance = 50.0f;
-    weld->ProfileInstance.LinearLimit.Restitution = 1.0f;
-    weld->ProfileInstance.LinearLimit.XMotion = ELinearConstraintMotion::LCM_Locked;
-    weld->ProfileInstance.LinearLimit.YMotion = ELinearConstraintMotion::LCM_Locked;
-    weld->ProfileInstance.LinearLimit.ZMotion = ELinearConstraintMotion::LCM_Locked;
+void AShipPart::ConnectVertically(AShipPart* top, AShipPart* bottom)
+{
+    if (top && bottom)
+    {
+        top->Connections[CI_Bottom] = bottom;
+        bottom->Connections[CI_Top] = top;
+    }
+}
 
-    weld->ProfileInstance.ConeLimit.bSoftConstraint = false;
-    weld->ProfileInstance.ConeLimit.Swing1Motion = EAngularConstraintMotion::ACM_Locked;
-    weld->ProfileInstance.ConeLimit.Swing2Motion = EAngularConstraintMotion::ACM_Locked;
-
-    weld->ProfileInstance.TwistLimit.bSoftConstraint = false;
-    weld->ProfileInstance.TwistLimit.TwistMotion = EAngularConstraintMotion::ACM_Locked;
-
-    const FVector pos = (p1->GetActorLocation() - p2->GetActorLocation()) * 0.5f + p2->GetActorLocation();
-    // First we convert world space position of constraint into local space frames
-    FTransform t1 = p1->MainBody->GetComponentTransform();
-    t1.RemoveScaling();
-    FTransform t2 = p2->MainBody->GetComponentTransform();
-    t2.RemoveScaling();
-    weld->Pos1 = t1.InverseTransformPosition(pos);
-    weld->Pos2 = t2.InverseTransformPosition(pos);
-
-    weld->InitConstraint(p1->MainBody->GetPhysicsObjectById(0), p2->MainBody->GetPhysicsObjectById(0), 1.0f, nullptr);
-
-    p1->AddWeld(p2, weld);
-    p2->AddWeld(p1, weld);
+void AShipPart::ConnectHorizontally(AShipPart* left, AShipPart* right)
+{
+    if (left && right)
+    {
+        left->Connections[CI_Right] = right;
+        right->Connections[CI_Left] = left;
+    }
 }
