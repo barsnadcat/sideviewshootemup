@@ -30,23 +30,24 @@ public:
 
     virtual void Interact(APlayerController* playerController) {}
 
-    virtual void EndPlay(const EEndPlayReason::Type endPlayReason) override;
     void BreakAndReweldShip();
-
-    static void ConnectVertically(AShipPart* top, AShipPart* bottom);
-    static void ConnectHorizontally(AShipPart* left, AShipPart* right);
     void SetCoord(uint8 row, uint8 col)
     {
         Row = row;
         Column = col;
     }
 
+    static void ConnectVertically(AShipPart* top, AShipPart* bottom);
+    static void ConnectHorizontally(AShipPart* left, AShipPart* right);
+
 private:
     static int32 Distance(AShipPart* a, AShipPart* b);
     static bool IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<AShipPart*>& parts);
+    static void Reweld(TSet<AShipPart*>& parts);
+
     void Disconnect();
     AShipPart* GetWeldRoot();
-    static void ReWeld(TSet<AShipPart*>& parts);
+
     enum EConnectionIndex : int
     {
         CI_Top = 0,

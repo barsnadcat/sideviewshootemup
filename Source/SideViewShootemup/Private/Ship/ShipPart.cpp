@@ -5,6 +5,7 @@
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/ShipPawn.h"
 #include "SideViewShootemup/SideViewShootemup.h"
+
 #include <map>
 
 AShipPart::AShipPart()
@@ -22,13 +23,10 @@ AShipPart::AShipPart()
     BoxCollisionComponent->SetupAttachment(RootComponent);
 }
 
-void AShipPart::EndPlay(const EEndPlayReason::Type endPlayReason)
-{
-    Super::EndPlay(endPlayReason);
-}
-
 void AShipPart::BreakAndReweldShip()
 {
+    SCOPED_NAMED_EVENT_TEXT("AShipPart::BreakAndReweldShip", FColor::Red);
+
     if (AShipPart* weldRoot = GetWeldRoot())
     {
         weldRoot->ConnectedToWeldRoot++;
@@ -42,7 +40,7 @@ void AShipPart::BreakAndReweldShip()
                 TSet<AShipPart*> parts;
                 if (!IsConnectedToWeldRoot(part, weldRoot, parts))
                 {
-                    ReWeld(parts);
+                    Reweld(parts);
                 }
             }
             Connections[i] = nullptr;
@@ -59,6 +57,7 @@ int32 AShipPart::Distance(AShipPart* a, AShipPart* b)
 
 bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<AShipPart*>& parts)
 {
+    SCOPED_NAMED_EVENT_TEXT("AShipPart::IsConnectedToWeldRoot", FColor::Red);
     std::multimap<int32, AShipPart*> openSet;
     openSet.insert(std::make_pair(Distance(part, root), part));
 
@@ -83,7 +82,7 @@ bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<ASh
             }
             return true;
         }
-        
+
         // Look around
         for (uint8 i = 0; i < CI_Size; i++)
         {
@@ -111,20 +110,30 @@ AShipPart* AShipPart::GetWeldRoot()
     return ownerComponent->GetOwner<AShipPart>();
 }
 
-void AShipPart::ReWeld(TSet<AShipPart*>& parts)
+void AShipPart::Reweld(TSet<AShipPart*>& parts)
 {
+    SCOPED_NAMED_EVENT_TEXT("AShipPart::Reweld", FColor::Red);
     AShipPart* newRoot = nullptr;
     for (AShipPart* part : parts)
     {
         if (!newRoot)
         {
             newRoot = part;
-            newRoot->MainBody->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            {
+                SCOPED_NAMED_EVENT_TEXT("DetachFromComponent newRoot", FColor::Red);
+                newRoot->MainBody->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            }
         }
         else
         {
-            part->MainBody->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-            part->MainBody->AttachToComponent(newRoot->MainBody, {EAttachmentRule::KeepWorld, true});
+            {
+                SCOPED_NAMED_EVENT_TEXT("DetachFromComponent part", FColor::Red);
+                part->MainBody->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            }
+            {
+                SCOPED_NAMED_EVENT_TEXT("AttachToComponent part", FColor::Red);
+                part->MainBody->AttachToComponent(newRoot->MainBody, {EAttachmentRule::KeepWorld, true});
+            }
         }
     }
 }
