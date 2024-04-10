@@ -5,6 +5,8 @@
 
 #include "BridgeShipPart.generated.h"
 
+class UPhysicsConstraintComponent;
+
 class AShipAIController;
 /**
  *
