@@ -5,6 +5,7 @@
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/ShipPawn.h"
 #include "SideViewShootemup/SideViewShootemup.h"
+#include "Ship/ShipStaticMeshComponent.h"
 
 #include <map>
 
@@ -13,7 +14,7 @@ AShipPart::AShipPart()
     Connections.SetNum(CI_Size);
 
     PrimaryActorTick.bCanEverTick = false;
-    MainBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBody"));
+    MainBody = CreateDefaultSubobject<UShipStaticMeshComponent>(TEXT("MainBody"));
     RootComponent = MainBody;
     Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 

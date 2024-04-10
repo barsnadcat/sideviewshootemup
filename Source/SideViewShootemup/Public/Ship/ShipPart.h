@@ -7,7 +7,7 @@
 
 class AShipPawn;
 class APlayerController;
-class UPhysicsConstraintComponent;
+class UShipStaticMeshComponent;
 class UHealthComponent;
 class UBoxComponent;
 
@@ -23,7 +23,7 @@ public:
     TObjectPtr<UBoxComponent> BoxCollisionComponent;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    TObjectPtr<UStaticMeshComponent> MainBody;
+    TObjectPtr<UShipStaticMeshComponent> MainBody;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UHealthComponent> Health;
