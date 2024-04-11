@@ -55,29 +55,32 @@ void AShipPawn::ConstructShip()
     }
 
     // Weld parts
-    for (int x = 0; x < parts.Num(); x++)
+    for (int row = 0; row < parts.Num(); row++)
     {
-        auto& partsRow = parts[x];
-        for (int y = 0; y < partsRow.Num(); y++)
+        auto& partsRow = parts[row];
+        for (int col = 0; col < partsRow.Num(); col++)
         {
-            if (AShipPart* part = partsRow[y])
+            if (AShipPart* part = partsRow[col])
             {
-                /*if (part != Bridge)
+                if (col > 0)
                 {
-                    part->MainBody->AttachToComponent(Bridge->MainBody, {EAttachmentRule::KeepWorld, true});
-                }*/
-                if (y > 0)
-                {
-                    AShipPart::Weld(part, partsRow[y - 1]);
+                    AShipPart::Weld(part, partsRow[col - 1]);
                 }
-                if (x > 0)
+                if (row > 0)
                 {
-                    AShipPart::Weld(part, parts[x - 1][y]);
+                    AShipPart::Weld(part, parts[row - 1][col]);
+                }
+                if (row > 0 && col > 0)
+                {
+                    AShipPart::Weld(part, parts[row - 1][col - 1]);
+                }
+                if (row > 0 && col + 1 < parts.Num())
+                {
+                     AShipPart::Weld(part, parts[row - 1][col + 1]);
                 }
             }
         }
     }
-    //UE_LOG(Game, Display, TEXT("Children %d"), Bridge->MainBody->GetAttachChildren().Num());
 }
 
 void AShipPawn::Tick(float DeltaTime)
