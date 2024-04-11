@@ -1,12 +1,13 @@
 #include "Ship/EngineShipPart.h"
 
 #include "Ship/ShipPawn.h"
+#include "Components/BoxComponent.h"
 
 AEngineShipPart::AEngineShipPart()
 {
     PrimaryActorTick.bCanEverTick = false;
     Axis = CreateDefaultSubobject<UAxisComponent>(TEXT("Axis"));
-    Axis->SetupAttachment(MainBody);
+    Axis->SetupAttachment(MainBody2);
 }
 
 void AEngineShipPart::PostActorCreated()
@@ -22,7 +23,6 @@ void AEngineShipPart::OnUpdateThrust(const FVector& vector, double thrust, float
     Axis->UpdateDirection(vector, deltaTime);
     if (thrust != 0.0f)
     {
-        
-        MainBody->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
+        MainBody2->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
     }
 }

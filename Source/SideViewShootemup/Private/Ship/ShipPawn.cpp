@@ -1,5 +1,6 @@
 #include "Ship/ShipPawn.h"
 
+#include "Components/BoxComponent.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/BridgeShipPart.h"
 #include "Ship/ShipDesign.h"
@@ -66,7 +67,7 @@ void AShipPawn::ConstructShip()
             {
                 if (part != Bridge)
                 {
-                    part->MainBody->AttachToComponent(Bridge->MainBody, {EAttachmentRule::KeepWorld, true});
+                    part->MainBody2->AttachToComponent(Bridge->MainBody2, {EAttachmentRule::KeepWorld, true});
                 }
                 if (column > 0)
                 {
@@ -79,7 +80,7 @@ void AShipPawn::ConstructShip()
             }
         }
     }
-    UE_LOG(Game, Display, TEXT("Children %d"), Bridge->MainBody->GetAttachChildren().Num());
+    UE_LOG(Game, Display, TEXT("Children %d"), Bridge->MainBody2->GetAttachChildren().Num());
 }
 
 void AShipPawn::Tick(float DeltaTime)

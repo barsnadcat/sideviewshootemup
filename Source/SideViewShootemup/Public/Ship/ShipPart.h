@@ -22,8 +22,11 @@ public:
     UPROPERTY(EditAnywhere)
     TObjectPtr<UBoxComponent> BoxCollisionComponent;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    UPROPERTY(EditAnywhere)
     TObjectPtr<UShipStaticMeshComponent> MainBody;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    TObjectPtr<UBoxComponent> MainBody2;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UHealthComponent> Health;
@@ -59,6 +62,7 @@ private:
 
     TArray<TWeakObjectPtr<AShipPart>> Connections;
     uint8 ConnectedToWeldRoot = 0;
+    uint8 Seen = 0;
     uint8 Row = 0;
     uint8 Column = 0;
 };
