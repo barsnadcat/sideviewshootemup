@@ -20,13 +20,13 @@ public:
     AShipPart();
 
     UPROPERTY(EditAnywhere)
-    TObjectPtr<UBoxComponent> BoxCollisionComponent;
+    TObjectPtr<UBoxComponent> Overlap;
 
     UPROPERTY(EditAnywhere)
-    TObjectPtr<UShipStaticMeshComponent> MainBody;
+    TObjectPtr<UShipStaticMeshComponent> Mesh;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    TObjectPtr<UBoxComponent> MainBody2;
+    TObjectPtr<UBoxComponent> Body;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UHealthComponent> Health;

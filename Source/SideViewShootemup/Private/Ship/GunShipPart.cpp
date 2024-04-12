@@ -8,7 +8,7 @@ AGunShipPart::AGunShipPart()
 {
     PrimaryActorTick.bCanEverTick = false;
     Axis = CreateDefaultSubobject<UAxisComponent>(TEXT("Axis"));
-    Axis->SetupAttachment(MainBody2);
+    Axis->SetupAttachment(RootComponent);
     GunMuzzle = CreateDefaultSubobject<USceneComponent>(TEXT("GunMuzzle"));
     GunMuzzle->SetupAttachment(Axis);
 }

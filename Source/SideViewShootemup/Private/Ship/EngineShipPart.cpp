@@ -7,7 +7,7 @@ AEngineShipPart::AEngineShipPart()
 {
     PrimaryActorTick.bCanEverTick = false;
     Axis = CreateDefaultSubobject<UAxisComponent>(TEXT("Axis"));
-    Axis->SetupAttachment(MainBody2);
+    Axis->SetupAttachment(RootComponent);
 }
 
 void AEngineShipPart::PostActorCreated()
@@ -23,6 +23,6 @@ void AEngineShipPart::OnUpdateThrust(const FVector& vector, double thrust, float
     Axis->UpdateDirection(vector, deltaTime);
     if (thrust != 0.0f)
     {
-        MainBody2->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
+        Body->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
     }
 }

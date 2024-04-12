@@ -15,16 +15,33 @@ AShipPart::AShipPart()
 
     PrimaryActorTick.bCanEverTick = false;
 
-    MainBody2 = CreateDefaultSubobject<UBoxComponent>(TEXT("MainBody2"));
-    MainBody2->InitBoxExtent(FVector(110.0f, 110.0f, 110.0f));
-    RootComponent = MainBody2;
+    Body = CreateDefaultSubobject<UBoxComponent>(TEXT("Body"));
+    Body->SetComponentTickEnabled(false);
+    Body->InitBoxExtent(FVector(110.0f, 110.0f, 110.0f));
+    Body->SetGenerateOverlapEvents(false);
+    Body->SetSimulatePhysics(true);
+    Body->SetLinearDamping(1.5f);
+    Body->SetAngularDamping(1.5f);
+    Body->SetCollisionProfileName(TEXT("ShipPartBody"));
+    Body->SetMassOverrideInKg(NAME_None, 250.f, true);
+    RootComponent = Body;
 
-    MainBody = CreateDefaultSubobject<UShipStaticMeshComponent>(TEXT("MainBody"));
-    MainBody->SetupAttachment(RootComponent);
+    Mesh = CreateDefaultSubobject<UShipStaticMeshComponent>(TEXT("Mesh"));
+    Mesh->SetComponentTickEnabled(false);
+    Mesh->SetupAttachment(RootComponent);
+    Mesh->SetGenerateOverlapEvents(false);
+    Mesh->SetSimulatePhysics(false);
+    Mesh->SetCollisionProfileName(TEXT("ShipPartMesh"));
+    Mesh->BodyInstance.bAutoWeld = false;
 
-    BoxCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
-    BoxCollisionComponent->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
-    BoxCollisionComponent->SetupAttachment(RootComponent);
+    Overlap = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlap"));
+    Overlap->SetComponentTickEnabled(false);
+    Overlap->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
+    Overlap->SetupAttachment(RootComponent);
+    Overlap->SetGenerateOverlapEvents(true);
+    Overlap->SetSimulatePhysics(false);
+    Overlap->SetCollisionProfileName(TEXT("ShipPartOverlap"));
+    Overlap->BodyInstance.bAutoWeld = false;
 
     Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 }
@@ -114,7 +131,7 @@ bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<ASh
 
 AShipPart* AShipPart::GetWeldRoot()
 {
-    FBodyInstance* bodyInstance = MainBody2->GetBodyInstance();
+    FBodyInstance* bodyInstance = Body->GetBodyInstance();
     check(bodyInstance);
     UPrimitiveComponent* ownerComponent = bodyInstance->OwnerComponent.Get();
     check(ownerComponent);
@@ -132,18 +149,18 @@ void AShipPart::Reweld(TSet<AShipPart*>& parts)
             newRoot = part;
             {
                 SCOPED_NAMED_EVENT_TEXT("DetachFromComponent newRoot", FColor::Red);
-                newRoot->MainBody2->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+                newRoot->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
             }
         }
         else
         {
             {
                 SCOPED_NAMED_EVENT_TEXT("DetachFromComponent part", FColor::Red);
-                part->MainBody2->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+                part->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
             }
             {
                 SCOPED_NAMED_EVENT_TEXT("AttachToComponent part", FColor::Red);
-                part->MainBody2->AttachToComponent(newRoot->MainBody2, {EAttachmentRule::KeepWorld, true});
+                part->Body->AttachToComponent(newRoot->Body, {EAttachmentRule::KeepWorld, true});
             }
         }
     }
