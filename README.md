@@ -62,3 +62,16 @@ Bad:
 
 ## Lego fortnite approach
 Use FClusterUnion and FGeometryCollection.
+
+- FClusterUnionManager
+  - FClusterUnionPhysicsProxy
+    - *UClusterUnionComponent*
+      - AClusterUnionActor
+      - *ChaosModularVehicle*
+        - UClusterUnionVehicleComponent
+          - AModularVehicleClusterActor
+          - AModularVehicleClusterPawn
+          - FModularVehicleSocket
+        - UModularVehicleBaseComponent
+          - FModularVehicleBuilder
+        
