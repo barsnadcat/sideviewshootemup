@@ -7,7 +7,7 @@
 
 class AShipPawn;
 class APlayerController;
-class UShipStaticMeshComponent;
+class UStaticMeshComponent;
 class UHealthComponent;
 class UBoxComponent;
 
@@ -23,7 +23,7 @@ public:
     TObjectPtr<UBoxComponent> Overlap;
 
     UPROPERTY(EditAnywhere)
-    TObjectPtr<UShipStaticMeshComponent> Mesh;
+    TObjectPtr<UStaticMeshComponent> StaticMesh;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UBoxComponent> Body;

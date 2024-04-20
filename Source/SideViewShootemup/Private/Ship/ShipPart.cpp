@@ -4,7 +4,6 @@
 #include "HealthComponent.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/ShipPawn.h"
-#include "Ship/ShipStaticMeshComponent.h"
 #include "SideViewShootemup/SideViewShootemup.h"
 
 #include <map>
@@ -26,13 +25,13 @@ AShipPart::AShipPart()
     Body->SetMassOverrideInKg(NAME_None, 250.f, true);
     RootComponent = Body;
 
-    Mesh = CreateDefaultSubobject<UShipStaticMeshComponent>(TEXT("Mesh"));
-    Mesh->SetComponentTickEnabled(false);
-    Mesh->SetupAttachment(RootComponent);
-    Mesh->SetGenerateOverlapEvents(false);
-    Mesh->SetSimulatePhysics(false);
-    Mesh->SetCollisionProfileName(TEXT("ShipPartMesh"));
-    Mesh->BodyInstance.bAutoWeld = false;
+    StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+    StaticMesh->SetComponentTickEnabled(false);
+    StaticMesh->SetupAttachment(RootComponent);
+    StaticMesh->SetGenerateOverlapEvents(false);
+    StaticMesh->SetSimulatePhysics(false);
+    StaticMesh->SetCollisionProfileName(TEXT("ShipPartMesh"));
+    StaticMesh->BodyInstance.bAutoWeld = false;
 
     Overlap = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlap"));
     Overlap->SetComponentTickEnabled(false);
@@ -147,21 +146,12 @@ void AShipPart::Reweld(TSet<AShipPart*>& parts)
         if (!newRoot)
         {
             newRoot = part;
-            {
-                SCOPED_NAMED_EVENT_TEXT("DetachFromComponent newRoot", FColor::Red);
-                newRoot->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-            }
+            newRoot->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
         }
         else
         {
-            {
-                SCOPED_NAMED_EVENT_TEXT("DetachFromComponent part", FColor::Red);
-                part->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-            }
-            {
-                SCOPED_NAMED_EVENT_TEXT("AttachToComponent part", FColor::Red);
-                part->Body->AttachToComponent(newRoot->Body, {EAttachmentRule::KeepWorld, true});
-            }
+            part->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            part->Body->AttachToComponent(newRoot->Body, {EAttachmentRule::KeepWorld, true});
         }
     }
 }
