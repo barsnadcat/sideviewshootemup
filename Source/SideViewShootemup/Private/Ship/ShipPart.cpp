@@ -1,6 +1,7 @@
 #include "Ship/ShipPart.h"
 
 #include "Components/BoxComponent.h"
+#include "GeometryCollection/GeometryCollectionComponent.h"
 #include "HealthComponent.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/ShipPawn.h"
@@ -25,13 +26,13 @@ AShipPart::AShipPart()
     Body->SetMassOverrideInKg(NAME_None, 250.f, true);
     RootComponent = Body;
 
-    StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-    StaticMesh->SetComponentTickEnabled(false);
-    StaticMesh->SetupAttachment(RootComponent);
-    StaticMesh->SetGenerateOverlapEvents(false);
-    StaticMesh->SetSimulatePhysics(false);
-    StaticMesh->SetCollisionProfileName(TEXT("ShipPartMesh"));
-    StaticMesh->BodyInstance.bAutoWeld = false;
+    GeometryCollection = CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollection"));
+    GeometryCollection->SetComponentTickEnabled(false);
+    GeometryCollection->SetupAttachment(RootComponent);
+    GeometryCollection->SetGenerateOverlapEvents(false);
+    GeometryCollection->SetSimulatePhysics(false);
+    GeometryCollection->SetCollisionProfileName(TEXT("ShipPartMesh"));
+    GeometryCollection->BodyInstance.bAutoWeld = false;
 
     Overlap = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlap"));
     Overlap->SetComponentTickEnabled(false);
