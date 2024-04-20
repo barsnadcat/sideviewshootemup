@@ -1,5 +1,6 @@
 #include "Ship/ShipPawn.h"
 
+#include "Components/BoxComponent.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/BridgeShipPart.h"
 #include "Ship/ShipDesign.h"
@@ -33,46 +34,53 @@ void AShipPawn::ConstructShip()
 
     TArray<TArray<AShipPart*>> parts;
     parts.SetNum(ShipDesign->X.Num());
-    for (int x = 0; x < ShipDesign->X.Num(); x++)
+    for (uint8 row = 0; row < ShipDesign->X.Num(); row++)
     {
-        const auto& designRow = ShipDesign->X[x].Y;
-        auto& partsRow = parts[x];
+        const auto& designRow = ShipDesign->X[row].Y;
+        auto& partsRow = parts[row];
         partsRow.SetNum(designRow.Num());
 
-        for (int y = 0; y < designRow.Num(); y++)
+        for (uint8 column = 0; column < designRow.Num(); column++)
         {
-            TSubclassOf<AShipPart> partClass = designRow[y];
+            TSubclassOf<AShipPart> partClass = designRow[column];
             if (partClass)
             {
-                FVector partPos = GetActorLocation() + FVector(y * -ShipDesign->GridSize, 0.f, x * ShipDesign->GridSize);
-                partsRow[y] = world->SpawnActor<AShipPart>(partClass, partPos, FRotator::ZeroRotator, spawnParams);
-                if (ABridgeShipPart* bridgePart = Cast<ABridgeShipPart>(partsRow[y]))
+                FVector partPos = GetActorLocation() + FVector(column * ShipDesign->GridSize, 0.f, row * -ShipDesign->GridSize);
+                AShipPart* newPart = world->SpawnActor<AShipPart>(partClass, partPos, FRotator::ZeroRotator, spawnParams);
+                newPart->SetCoord(row, column);
+                if (ABridgeShipPart* bridgePart = Cast<ABridgeShipPart>(newPart))
                 {
                     Bridge = bridgePart;
                 }
+                partsRow[column] = newPart;
             }
         }
     }
 
     // Weld parts
-    for (int x = 0; x < parts.Num(); x++)
+    for (uint8 row = 0; row < parts.Num(); row++)
     {
-        auto& partsRow = parts[x];
-        for (int y = 0; y < partsRow.Num(); y++)
+        auto& partsRow = parts[row];
+        for (uint8 column = 0; column < partsRow.Num(); column++)
         {
-            if (AShipPart* part = partsRow[y])
+            if (AShipPart* part = partsRow[column])
             {
-                if (y > 0)
+                if (part != Bridge)
                 {
-                    AShipPart::Weld(part, partsRow[y - 1]);
+                    part->Body->AttachToComponent(Bridge->Body, {EAttachmentRule::KeepWorld, true});
                 }
-                if (x > 0)
+                if (column > 0)
                 {
-                    AShipPart::Weld(part, parts[x - 1][y]);
+                    AShipPart::ConnectHorizontally(partsRow[column - 1], part);
+                }
+                if (row > 0)
+                {
+                    AShipPart::ConnectVertically(parts[row - 1][column], part);
                 }
             }
         }
     }
+    UE_LOG(Game, Display, TEXT("Children %d"), Bridge->Body->GetAttachChildren().Num());
 }
 
 void AShipPawn::Tick(float DeltaTime)

@@ -17,7 +17,7 @@ void UPhysCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevel
     if (!Acceleration.IsNearlyZero())
     {
         UpdatedPrimitive->AddForce(Acceleration, NAME_None, true);
-        UpdatetOrientation(Acceleration);
+        //UpdatetOrientation(Acceleration);
     }
 }
 
@@ -65,7 +65,6 @@ bool UPhysCharacterMovementComponent::IsFalling() const
 
 void UPhysCharacterMovementComponent::UpdatetOrientation(const FVector& v)
 {
-    return;
     FRotator orientation;
     if (v.X > 1.f)
     {

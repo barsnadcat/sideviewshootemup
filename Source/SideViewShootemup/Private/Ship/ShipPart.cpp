@@ -1,100 +1,205 @@
 #include "Ship/ShipPart.h"
 
+#include "Components/BoxComponent.h"
 #include "HealthComponent.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/ShipPawn.h"
+#include "Ship/ShipStaticMeshComponent.h"
 #include "SideViewShootemup/SideViewShootemup.h"
+
+#include <map>
 
 AShipPart::AShipPart()
 {
+    Connections.SetNum(CI_Size);
+
     PrimaryActorTick.bCanEverTick = false;
-    MainBody = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBody"));
-    RootComponent = MainBody;
+
+    Body = CreateDefaultSubobject<UBoxComponent>(TEXT("Body"));
+    Body->SetComponentTickEnabled(false);
+    Body->InitBoxExtent(FVector(110.0f, 110.0f, 110.0f));
+    Body->SetGenerateOverlapEvents(false);
+    Body->SetSimulatePhysics(true);
+    Body->SetLinearDamping(1.5f);
+    Body->SetAngularDamping(1.5f);
+    Body->SetCollisionProfileName(TEXT("ShipPartBody"));
+    Body->SetMassOverrideInKg(NAME_None, 250.f, true);
+    RootComponent = Body;
+
+    Mesh = CreateDefaultSubobject<UShipStaticMeshComponent>(TEXT("Mesh"));
+    Mesh->SetComponentTickEnabled(false);
+    Mesh->SetupAttachment(RootComponent);
+    Mesh->SetGenerateOverlapEvents(false);
+    Mesh->SetSimulatePhysics(false);
+    Mesh->SetCollisionProfileName(TEXT("ShipPartMesh"));
+    Mesh->BodyInstance.bAutoWeld = false;
+
+    Overlap = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlap"));
+    Overlap->SetComponentTickEnabled(false);
+    Overlap->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
+    Overlap->SetupAttachment(RootComponent);
+    Overlap->SetGenerateOverlapEvents(true);
+    Overlap->SetSimulatePhysics(false);
+    Overlap->SetCollisionProfileName(TEXT("ShipPartOverlap"));
+    Overlap->BodyInstance.bAutoWeld = false;
+
     Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 }
 
-void AShipPart::EndPlay(const EEndPlayReason::Type endPlayReason)
+void AShipPart::BreakAndReweldShip()
 {
-    Super::EndPlay(endPlayReason);
+    SCOPED_NAMED_EVENT_TEXT("AShipPart::BreakAndReweldShip", FColor::Red);
 
-    for (const TPair<TObjectPtr<AShipPart>, TSharedPtr<FConstraintInstance>>& pair : welds)
+    if (AShipPart* weldRoot = GetWeldRoot())
     {
-        if (pair.Key)
+        static uint8 connectedToWeldRoot = 0;
+        connectedToWeldRoot++;
+        weldRoot->ConnectedToWeldRoot = connectedToWeldRoot;
+
+        Disconnect();
+
+        for (uint8 i = 0; i < CI_Size; i++)
         {
-            pair.Key->RemoveWeld(this);
-        }
-        if (pair.Value)
-        {
-            pair.Value->TermConstraint();
+            if (AShipPart* part = Connections[i].Get())
+            {
+                TSet<AShipPart*> parts;
+                if (!IsConnectedToWeldRoot(part, weldRoot, parts))
+                {
+                    Reweld(parts);
+                }
+            }
+            Connections[i] = nullptr;
         }
     }
-    welds.Empty();
 }
 
-void AShipPart::AddWeld(AShipPart* otherShipPart, TSharedPtr<FConstraintInstance> weld)
+int32 AShipPart::Distance(AShipPart* a, AShipPart* b)
 {
-    check(otherShipPart);
-    welds.Add(otherShipPart, weld);
+    int32 rowDistance = a->Row - b->Row;
+    int32 colDistance = a->Column - b->Column;
+    return rowDistance * rowDistance + colDistance * colDistance;
 }
 
-void AShipPart::RemoveWeld(AShipPart* otherShipPart)
+bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<AShipPart*>& parts)
 {
-    check(otherShipPart);
-    welds.Remove(otherShipPart);
-}
+    SCOPED_NAMED_EVENT_TEXT("AShipPart::IsConnectedToWeldRoot", FColor::Red);
+    std::multimap<int32, AShipPart*> openSet;
+    static uint8 seen = 0;
+    seen++;
+    part->Seen = seen;
+    openSet.insert(std::make_pair(Distance(part, root), part));
+    parts.Reserve(500);
 
-void AShipPart::Weld(AShipPart* p1, AShipPart* p2)
-{
-    if (!p1 || !p2)
+    while (!openSet.empty())
     {
-        return;
+        // Pop closest to the root
+        AShipPart* current = nullptr;
+        auto it = openSet.begin();
+        current = it->second;
+        openSet.erase(it);
+
+        // Connected to the root check
+        if (current->ConnectedToWeldRoot == root->ConnectedToWeldRoot)
+        {
+            // Caching path to the root
+            for (auto& j : openSet)
+            {
+                j.second->ConnectedToWeldRoot = root->ConnectedToWeldRoot;
+            }
+            return true;
+        }
+        current->ConnectedToWeldRoot = root->ConnectedToWeldRoot;
+
+        // Look around
+        for (uint8 i = 0; i < CI_Size; i++)
+        {
+            if (AShipPart* n = current->Connections[i].Get())
+            {
+                if (n->Seen != seen)
+                {
+                    n->Seen = seen;
+                    openSet.insert(std::make_pair(Distance(n, root), n));
+                }
+            }
+        }
+
+        parts.Add(current);
     }
-    check(p1 != p2);
 
-    TSharedPtr<FConstraintInstance> weld = MakeShared<FConstraintInstance>();
+    return false;
+}
 
-    weld->ProfileInstance.bDisableCollision = true;
-    weld->ProfileInstance.bEnableMassConditioning = false;
-    weld->ProfileInstance.bEnableShockPropagation = false;
-    weld->ProfileInstance.bLinearBreakable = false;
-    weld->ProfileInstance.bLinearPlasticity = false;
-    weld->ProfileInstance.bAngularBreakable = false;
-    weld->ProfileInstance.bAngularPlasticity = false;
+AShipPart* AShipPart::GetWeldRoot()
+{
+    FBodyInstance* bodyInstance = Body->GetBodyInstance();
+    check(bodyInstance);
+    UPrimitiveComponent* ownerComponent = bodyInstance->OwnerComponent.Get();
+    check(ownerComponent);
+    return ownerComponent->GetOwner<AShipPart>();
+}
 
-    weld->ProfileInstance.bEnableProjection = true;
-    weld->ProfileInstance.ProjectionLinearTolerance = 0.1f;
-    weld->ProfileInstance.ProjectionLinearAlpha = 0.0f;
-    weld->ProfileInstance.ProjectionAngularTolerance = 0.1f;
-    weld->ProfileInstance.ProjectionAngularAlpha = 0.0f;
+void AShipPart::Reweld(TSet<AShipPart*>& parts)
+{
+    SCOPED_NAMED_EVENT_TEXT("AShipPart::Reweld", FColor::Red);
+    AShipPart* newRoot = nullptr;
+    for (AShipPart* part : parts)
+    {
+        if (!newRoot)
+        {
+            newRoot = part;
+            {
+                SCOPED_NAMED_EVENT_TEXT("DetachFromComponent newRoot", FColor::Red);
+                newRoot->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            }
+        }
+        else
+        {
+            {
+                SCOPED_NAMED_EVENT_TEXT("DetachFromComponent part", FColor::Red);
+                part->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            }
+            {
+                SCOPED_NAMED_EVENT_TEXT("AttachToComponent part", FColor::Red);
+                part->Body->AttachToComponent(newRoot->Body, {EAttachmentRule::KeepWorld, true});
+            }
+        }
+    }
+}
 
-    weld->ProfileInstance.ContactTransferScale = 1.0f;
+void AShipPart::Disconnect()
+{
+    if (AShipPart* top = Connections[CI_Top].Get())
+    {
+        top->Connections[CI_Bottom] = nullptr;
+    }
+    if (AShipPart* right = Connections[CI_Right].Get())
+    {
+        right->Connections[CI_Left] = nullptr;
+    }
+    if (AShipPart* bottom = Connections[CI_Bottom].Get())
+    {
+        bottom->Connections[CI_Top] = nullptr;
+    }
+    if (AShipPart* left = Connections[CI_Left].Get())
+    {
+        left->Connections[CI_Right] = nullptr;
+    }
+}
 
-    weld->ProfileInstance.LinearLimit.bSoftConstraint = false;
-    weld->ProfileInstance.LinearLimit.Limit = 0.0f;
-    weld->ProfileInstance.LinearLimit.ContactDistance = 50.0f;
-    weld->ProfileInstance.LinearLimit.Restitution = 1.0f;
-    weld->ProfileInstance.LinearLimit.XMotion = ELinearConstraintMotion::LCM_Locked;
-    weld->ProfileInstance.LinearLimit.YMotion = ELinearConstraintMotion::LCM_Locked;
-    weld->ProfileInstance.LinearLimit.ZMotion = ELinearConstraintMotion::LCM_Locked;
+void AShipPart::ConnectVertically(AShipPart* top, AShipPart* bottom)
+{
+    if (top && bottom)
+    {
+        top->Connections[CI_Bottom] = bottom;
+        bottom->Connections[CI_Top] = top;
+    }
+}
 
-    weld->ProfileInstance.ConeLimit.bSoftConstraint = false;
-    weld->ProfileInstance.ConeLimit.Swing1Motion = EAngularConstraintMotion::ACM_Locked;
-    weld->ProfileInstance.ConeLimit.Swing2Motion = EAngularConstraintMotion::ACM_Locked;
-
-    weld->ProfileInstance.TwistLimit.bSoftConstraint = false;
-    weld->ProfileInstance.TwistLimit.TwistMotion = EAngularConstraintMotion::ACM_Locked;
-
-    const FVector pos = (p1->GetActorLocation() - p2->GetActorLocation()) * 0.5f + p2->GetActorLocation();
-    // First we convert world space position of constraint into local space frames
-    FTransform t1 = p1->MainBody->GetComponentTransform();
-    t1.RemoveScaling();
-    FTransform t2 = p2->MainBody->GetComponentTransform();
-    t2.RemoveScaling();
-    weld->Pos1 = t1.InverseTransformPosition(pos);
-    weld->Pos2 = t2.InverseTransformPosition(pos);
-
-    weld->InitConstraint(p1->MainBody->GetPhysicsObjectById(0), p2->MainBody->GetPhysicsObjectById(0), 1.0f, nullptr);
-
-    p1->AddWeld(p2, weld);
-    p2->AddWeld(p1, weld);
+void AShipPart::ConnectHorizontally(AShipPart* left, AShipPart* right)
+{
+    if (left && right)
+    {
+        left->Connections[CI_Right] = right;
+        right->Connections[CI_Left] = left;
+    }
 }

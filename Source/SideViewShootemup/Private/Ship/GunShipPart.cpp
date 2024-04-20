@@ -1,5 +1,6 @@
 #include "Ship/GunShipPart.h"
 
+#include "Components/BoxComponent.h"
 #include "Ship/ShipPawn.h"
 #include "SideViewShootemup/SideViewShootemup.h"
 
@@ -7,7 +8,7 @@ AGunShipPart::AGunShipPart()
 {
     PrimaryActorTick.bCanEverTick = false;
     Axis = CreateDefaultSubobject<UAxisComponent>(TEXT("Axis"));
-    Axis->SetupAttachment(MainBody);
+    Axis->SetupAttachment(RootComponent);
     GunMuzzle = CreateDefaultSubobject<USceneComponent>(TEXT("GunMuzzle"));
     GunMuzzle->SetupAttachment(Axis);
 }
