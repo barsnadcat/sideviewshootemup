@@ -15,7 +15,7 @@ AShipPart::AShipPart()
 
     PrimaryActorTick.bCanEverTick = false;
 
-    Body = CreateDefaultSubobject<UBoxComponent>(TEXT("Body"));
+    /*Body = CreateDefaultSubobject<UBoxComponent>(TEXT("Body"));
     Body->SetComponentTickEnabled(false);
     Body->InitBoxExtent(FVector(110.0f, 110.0f, 110.0f));
     Body->SetGenerateOverlapEvents(false);
@@ -24,15 +24,17 @@ AShipPart::AShipPart()
     Body->SetAngularDamping(1.5f);
     Body->SetCollisionProfileName(TEXT("ShipPartBody"));
     Body->SetMassOverrideInKg(NAME_None, 250.f, true);
-    RootComponent = Body;
+    RootComponent = Body;*/
 
     GeometryCollection = CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollection"));
     GeometryCollection->SetComponentTickEnabled(false);
-    GeometryCollection->SetupAttachment(RootComponent);
+    //GeometryCollection->SetupAttachment(RootComponent);
     GeometryCollection->SetGenerateOverlapEvents(false);
     GeometryCollection->SetSimulatePhysics(false);
     GeometryCollection->SetCollisionProfileName(TEXT("ShipPartMesh"));
     GeometryCollection->BodyInstance.bAutoWeld = false;
+    RootComponent = GeometryCollection;
+    Primitive = GeometryCollection;
 
     Overlap = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlap"));
     Overlap->SetComponentTickEnabled(false);
@@ -131,7 +133,7 @@ bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<ASh
 
 AShipPart* AShipPart::GetWeldRoot()
 {
-    FBodyInstance* bodyInstance = Body->GetBodyInstance();
+    FBodyInstance* bodyInstance = Primitive->GetBodyInstance();
     check(bodyInstance);
     UPrimitiveComponent* ownerComponent = bodyInstance->OwnerComponent.Get();
     check(ownerComponent);
@@ -147,12 +149,12 @@ void AShipPart::Reweld(TSet<AShipPart*>& parts)
         if (!newRoot)
         {
             newRoot = part;
-            newRoot->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            newRoot->Primitive->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
         }
         else
         {
-            part->Body->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-            part->Body->AttachToComponent(newRoot->Body, {EAttachmentRule::KeepWorld, true});
+            part->Primitive->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+            part->Primitive->AttachToComponent(newRoot->Primitive, {EAttachmentRule::KeepWorld, true});
         }
     }
 }
