@@ -25,8 +25,9 @@ public:
     UPROPERTY(EditAnywhere)
     TObjectPtr<UGeometryCollectionComponent> GeometryCollection;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    TObjectPtr<UBoxComponent> Body;
+    //UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
+    //TObjectPtr<UBoxComponent> Body;
+    TObjectPtr<UPrimitiveComponent> Primitive; 
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UHealthComponent> Health;

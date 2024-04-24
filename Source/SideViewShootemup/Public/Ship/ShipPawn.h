@@ -8,6 +8,7 @@
 class AShipPart;
 class ABridgeShipPart;
 class UShipDesign;
+class UClusterUnionComponent; 
 
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FGenerateThrust, const FVector&, double, float);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector&, float);
@@ -22,6 +23,9 @@ public:
     AShipPawn();
 
     UPROPERTY(EditAnywhere)
+    TObjectPtr<UClusterUnionComponent> ClusterUnion;
+
+    UPROPERTY(EditAnywhere)
     TObjectPtr<UShipDesign> ShipDesign;
 
     FGenerateThrust UpdateThrust;
@@ -30,6 +34,7 @@ public:
 
 public:
     virtual void BeginPlay() override;
+    void Union(AShipPart* a);
     virtual void Tick(float DeltaTime) override;
 
     void SetAimPosition(const FVector& vector) { mAimPosition = vector; }

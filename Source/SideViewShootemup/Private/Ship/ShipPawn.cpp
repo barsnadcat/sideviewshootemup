@@ -7,11 +7,16 @@
 #include "Ship/ShipPart.h"
 #include "ShipAIController.h"
 #include "SideViewShootemup/SideViewShootemup.h"
+#include "PhysicsEngine/ClusterUnionComponent.h"
+#include "GeometryCollection/GeometryCollectionComponent.h"
 
 AShipPawn::AShipPawn()
 {
     PrimaryActorTick.bCanEverTick = true;
-    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+    //RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+    ClusterUnion = CreateDefaultSubobject<UClusterUnionComponent>(TEXT("ClusterUnion"));
+    RootComponent = ClusterUnion;
+    //ClusterUnion->SetupAttachment(RootComponent);
 }
 
 void AShipPawn::BeginPlay()
@@ -19,6 +24,12 @@ void AShipPawn::BeginPlay()
     Super::BeginPlay();
     ConstructShip();
     AutoPilot();
+}
+
+void AShipPawn::Union(AShipPart* shipPart)
+{
+    ClusterUnion->AddComponentToCluster(shipPart->GeometryCollection, {});
+    shipPart->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 }
 
 void AShipPawn::ConstructShip()
@@ -52,13 +63,14 @@ void AShipPawn::ConstructShip()
                 {
                     Bridge = bridgePart;
                 }
+                Union(newPart);
                 partsRow[column] = newPart;
             }
         }
     }
 
     // Weld parts
-    for (uint8 row = 0; row < parts.Num(); row++)
+    /*for (uint8 row = 0; row < parts.Num(); row++)
     {
         auto& partsRow = parts[row];
         for (uint8 column = 0; column < partsRow.Num(); column++)
@@ -80,7 +92,7 @@ void AShipPawn::ConstructShip()
             }
         }
     }
-    UE_LOG(Game, Display, TEXT("Children %d"), Bridge->Body->GetAttachChildren().Num());
+    UE_LOG(Game, Display, TEXT("Children %d"), Bridge->Body->GetAttachChildren().Num());*/
 }
 
 void AShipPawn::Tick(float DeltaTime)
