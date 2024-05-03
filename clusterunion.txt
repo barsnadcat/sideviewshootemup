@@ -1,0 +1,49 @@
+
+
+
+
+
+
+FParticleDynamics::SetAcceleration
+Chaos::TPBDRigidParticle<double,3>::AddForce(const Chaos::TVector<double,3> & InF, bool bInvalidate) Line 3419	C++
+Chaos::TThreadedSingleParticlePhysicsProxyBase<1>::AddForce(const Chaos::TVector<double,3> & InForce, bool bInvalidate) Line 590	C++
+FChaosStateOps<Chaos::FRigidBodyHandle_External>::AddForceAtPosition(Chaos::FRigidBodyHandle_External & BodyHandle, const UE::Math::TVector<double> & Force, const UE::Math::TVector<double> & Position, bool bAllowSubstepping, bool bIsLocalForce) Line 906	C++
+	
+FBodyInstance::AddForceAtPosition::__l2::<lambda_1>::operator()() Line 3433	C++
+FBodyInstance::ApplyAsyncPhysicsCommand(FAsyncPhysicsTimestamp TimeStamp, const bool) Line 3399	C++
+FBodyInstance::AddForceAtPosition(const UE::Math::TVector<double> & Force, const UE::Math::TVector<double> & Position, bool bAllowSubstepping, bool bIsLocalForce, const FAsyncPhysicsTimestamp TimeStamp, APlayerController * PlayerController) Line 3429	C++
+UPrimitiveComponent::AddForceAtLocation(UE::Math::TVector<double> Force, UE::Math::TVector<double> Location, FName BoneName) Line 255	C++
+
+
+UPrimitiveComponent
+  FBodyInstance
+    UBodySetup
+	Chaos::FSingleParticlePhysicsProxy
+	  Particle TPBDRigidParticle
+	  
+UGeometryCollectionComponent
+  FGeometryCollectionPhysicsProxy
+    Chaos::FPBDRigidClusteredParticleHandle
+
+FPBDRigidsSolver
+  FPBDRigidsEvolutionGBF
+    FRigidClustering
+	  FClusterUnionManager
+	    FClusterUnion
+		  InternalCluster FPBDRigidClusteredParticleHandle // The root cluster particle that we created internally to represent the cluster.
+
+UClusterUnionComponent
+  FClusterCreationParameters
+  FAccelerationStructure << "Whether component level sweeps and overlaps against cluster unions should use an acceleration structure instead."
+	Chaos::FImplicitObjectUnionClustered
+	Chaos::FImplicitObjectUnion
+  IPhysicsProxyBase
+    Solver
+	Owner
+	Type(ClusterUnionProxy)
+	SyncTimestamp
+    Chaos::FClusterUnionPhysicsProxy
+	  Particle_External TPBDRigidParticle // Game thread particle
+	  Particle_Internal TPBDRigidClusteredParticleHandle == FClusterUnion::InternalCluster // Physics thread particle
+	  FClusterUnionIndex Chaos::FClusterUnionManager
+	    Chaos::FClusterUnion
