@@ -5,6 +5,7 @@
 
 
 FParticleDynamics::SetAcceleration
+FPhysicsSolverBase::AddDirtyProxy
 Chaos::TPBDRigidParticle<double,3>::AddForce(const Chaos::TVector<double,3> & InF, bool bInvalidate) Line 3419	C++
 Chaos::TThreadedSingleParticlePhysicsProxyBase<1>::AddForce(const Chaos::TVector<double,3> & InForce, bool bInvalidate) Line 590	C++
 FChaosStateOps<Chaos::FRigidBodyHandle_External>::AddForceAtPosition(Chaos::FRigidBodyHandle_External & BodyHandle, const UE::Math::TVector<double> & Force, const UE::Math::TVector<double> & Position, bool bAllowSubstepping, bool bIsLocalForce) Line 906	C++
@@ -16,34 +17,93 @@ UPrimitiveComponent::AddForceAtLocation(UE::Math::TVector<double> Force, UE::Mat
 
 
 UPrimitiveComponent
-  FBodyInstance
+  FBodyInstance BodyInstance
     UBodySetup
-	Chaos::FSingleParticlePhysicsProxy
+	Chaos::FSingleParticlePhysicsProxy ActorHandle
+	  IPhysicsProxyBase
 	  Particle TPBDRigidParticle
+	  FParticleHandle FGeometryParticleHandle
 	  
 UGeometryCollectionComponent
   FGeometryCollectionPhysicsProxy
     Chaos::FPBDRigidClusteredParticleHandle
 
 FPBDRigidsSolver
-  FPBDRigidsEvolutionGBF
-    FRigidClustering
-	  FClusterUnionManager
-	    FClusterUnion
-		  InternalCluster FPBDRigidClusteredParticleHandle // The root cluster particle that we created internally to represent the cluster.
+  FPBDRigidsEvolutionGBF MEvolution
+    FRigidClustering Clustering
+	  FClusterUnionManager ClusterUnionManager
+	    FClusterUnion ClusterUnions
+		  FPBDRigidClusteredParticleHandle InternalCluster // The root cluster particle that we created internally to represent the cluster.
+		    TPBDRigidClusteredParticleHandleImp
+			  TPBDRigidParticleHandleImp
+			    TKinematicGeometryParticleHandleImp
+				  TGeometryParticleHandleImp
+				    TParticleHandleBase
+                      TPBDRigidClusteredParticles PBDRigidClusteredParticles
+					    TPBDRigidParticles
+						  TVector MP // MX counter part - new position? // MParticles.SetP(Index, MParticles.GetX(Index) + MParticles.GetV(Index) * Dt); // If we don't set P, UpdateParticlePosition in evolution may stomp over X with P().
+						  TRotation MQ // MR counter part - new rotation?
+						  TRigidParticles
+						    TVec3 MI // Inertia
+							Real MM // Mass
+							TVector MAcceleration
+							TVector MAngularAcceleration
+							Real MLinearEtherDrag
+							Real MAngularEtherDrag
+						    TKinematicGeometryParticles
+							  TKinematicGeometryParticlesImp
+							    TVector MV // Velocity
+								TVector MW // Angular velocity
+							    TGeometryParticlesImp
+								  FShapeInstanceArray MShapesArray
+								  FConstraintHandleArray MParticleConstraints
+								  TSimpleGeometryParticles
+								    TRotation MR // Orientation in space
+									FImplicitObjectPtr MGeometry // contains raw ptrs to every entry in both MSharedGeometry and MDynamicGeometry. It may also contain raw ptrs to geometry which is managed outside of Chaos.
+								    TParticles
+									  TVector MX // Position in space
+									  TArrayCollection
+						  
 
 UClusterUnionComponent
   FClusterCreationParameters
   FAccelerationStructure << "Whether component level sweeps and overlaps against cluster unions should use an acceleration structure instead."
 	Chaos::FImplicitObjectUnionClustered
 	Chaos::FImplicitObjectUnion
-  IPhysicsProxyBase
-    Solver
-	Owner
-	Type(ClusterUnionProxy)
-	SyncTimestamp
-    Chaos::FClusterUnionPhysicsProxy
-	  Particle_External TPBDRigidParticle // Game thread particle
-	  Particle_Internal TPBDRigidClusteredParticleHandle == FClusterUnion::InternalCluster // Physics thread particle
-	  FClusterUnionIndex Chaos::FClusterUnionManager
-	    Chaos::FClusterUnion
+  Chaos::FClusterUnionPhysicsProxy PhysicsProxy
+    IPhysicsProxyBase
+      Solver
+      Owner
+      Type(ClusterUnionProxy)
+      SyncTimestamp
+    Particle_External TPBDRigidParticle // Game thread particle
+      // NO DIRTY FLAGS ALLOWED. We must strictly manage the dirty flags on the particle.
+      // Setting the particle's XR on the particle will set the XR dirty flag but that isn't
+      // used for the cluster union (there is no functionality in Chaos to let the particle
+      // be easily managed by a proxy that isn't the single particle physics proxy). And if the
+      // XR dirty flag is set, we'll try to access buffers that don't exist for cluster union proxies.
+	    CHAOS_PROPERTY(ClusterXR, FParticlePositionRotation, EPhysicsProxyType::ClusterUnionProxy)
+        CHAOS_PROPERTY(ClusterVelocities, FParticleVelocities, EPhysicsProxyType::ClusterUnionProxy)
+	  
+    Particle_Internal TPBDRigidClusteredParticleHandleImp == FClusterUnion::InternalCluster // Physics thread particle
+    FClusterUnionIndex Chaos::FClusterUnionManager
+      Chaos::FClusterUnion
+
+
+Since:
+1 FClusterUnionPhysicsProxy::PushToPhysicsState - pushes only XR and velocity
+
+2 C:\Program Files\Epic Games\UE_5.4\Engine\Source\Runtime\Experimental\ChaosVehicles\ChaosVehiclesCore\Private\SimModule\DeferredForcesModular.cpp
+Applies forces to internal particle
+
+I dont think you can actully do AddForce on External particle and expect it to work
+
+
+Internal is just an pointer. It is used during PushToPhysicsState - you actually need to know where what particle to modify!
+Now proxy make sense - it contains both particle and handle and now how to move data in and out of physics. This does icludes some interpolation, looks like physics is allowed to laps!
+
+Then what about thread safty?
+There is ExecuteWrite wrapper that is used both when modifying external particle and internal handle. Looks like all of that is "owned" by physics thread - transform is what left to game thread.
+
+ExecuteWrite on particle handle AddForce?
+Actually geometry collection does it exactly? Well not really, instead of ExecuteWrite, it useses EnqueueCommandImmediate
