@@ -27,6 +27,7 @@ public:
 
     virtual APawn* SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform) override;
     virtual void BeginPlay() override;
+    AShipPawn* GetShipPawn() { return ShipPawn; }
 
 private:
     TObjectPtr<AShipPawn> ShipPawn;

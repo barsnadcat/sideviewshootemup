@@ -4,6 +4,7 @@
 #include "GeometryCollection/GeometryCollectionComponent.h"
 #include "PhysicsEngine/ClusterUnionComponent.h"
 #include "Ship/ShipPawn.h"
+#include "Ship/MyClusterUnionComponent.h"
 
 AEngineShipPart::AEngineShipPart()
 {
@@ -25,10 +26,12 @@ void AEngineShipPart::OnUpdateThrust(const FVector& vector, double thrust, float
     Axis->UpdateDirection(vector, deltaTime);
     if (thrust != 0.0f)
     {
-        //if (AShipPawn* ship = GetOwner<AShipPawn>())
-        //{
-        //    ship->ClusterUnion->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
-        //}
-        GeometryCollection->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
+        if (AShipPawn* ship = GetOwner<AShipPawn>())
+        {
+            auto Force = Axis->GetComponentRotation().Vector() * thrust * MaxThrust;
+            auto Position = Axis->GetComponentLocation();
+            ship->ClusterUnion->AddForceAtLocation(Force, Position, NAME_None);
+        }
+        //GeometryCollection->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
     }
 }
