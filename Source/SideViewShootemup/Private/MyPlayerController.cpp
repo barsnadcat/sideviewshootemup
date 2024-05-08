@@ -105,7 +105,14 @@ void AMyPlayerController::OnInteractTriggered()
 {
     if (GetPawn() == DefaultPawn)
     {
-        DefaultPawn->Interact(this);
+        if (AMyGameMode* const gameMode = GetWorld()->GetAuthGameMode<AMyGameMode>())
+        {
+            if (AShipPawn* ship = gameMode->GetShipPawn())
+            {
+                Possess(ship);
+            }
+        }
+        //DefaultPawn->Interact(this);
     }
 }
 

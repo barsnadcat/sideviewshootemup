@@ -7,14 +7,14 @@
 #include "Ship/ShipPart.h"
 #include "ShipAIController.h"
 #include "SideViewShootemup/SideViewShootemup.h"
-#include "PhysicsEngine/ClusterUnionComponent.h"
+#include "Ship/MyClusterUnionComponent.h"
 #include "GeometryCollection/GeometryCollectionComponent.h"
 
 AShipPawn::AShipPawn()
 {
     PrimaryActorTick.bCanEverTick = true;
     //RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-    ClusterUnion = CreateDefaultSubobject<UClusterUnionComponent>(TEXT("ClusterUnion"));
+    ClusterUnion = CreateDefaultSubobject<UMyClusterUnionComponent>(TEXT("ClusterUnion"));
     RootComponent = ClusterUnion;
     //ClusterUnion->SetupAttachment(RootComponent);
 }

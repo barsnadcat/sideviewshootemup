@@ -8,7 +8,7 @@
 class AShipPart;
 class ABridgeShipPart;
 class UShipDesign;
-class UClusterUnionComponent; 
+class UMyClusterUnionComponent; 
 
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FGenerateThrust, const FVector&, double, float);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FUpdateAimTarget, const FVector&, float);
@@ -23,7 +23,7 @@ public:
     AShipPawn();
 
     UPROPERTY(EditAnywhere)
-    TObjectPtr<UClusterUnionComponent> ClusterUnion;
+    TObjectPtr<UMyClusterUnionComponent> ClusterUnion;
 
     UPROPERTY(EditAnywhere)
     TObjectPtr<UShipDesign> ShipDesign;
