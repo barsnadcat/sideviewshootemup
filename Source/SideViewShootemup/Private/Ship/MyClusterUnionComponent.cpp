@@ -8,6 +8,7 @@ void UMyClusterUnionComponent::AddForceAtLocation(FVector Force, FVector WorldLo
     {
         if (Chaos::FPhysicsSolver* RBDSolver = proxy->GetSolver<Chaos::FPhysicsSolver>())
         {
+            WakeAllRigidBodies();
             RBDSolver->EnqueueCommandImmediate([proxy, Force, WorldLocation, RBDSolver]()
                 {
 				Chaos::FReal ClosestDistanceSquared = TNumericLimits<Chaos::FReal>::Max();
