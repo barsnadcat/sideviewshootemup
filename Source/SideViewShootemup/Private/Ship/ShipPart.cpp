@@ -15,20 +15,8 @@ AShipPart::AShipPart()
 
     PrimaryActorTick.bCanEverTick = false;
 
-    /*Body = CreateDefaultSubobject<UBoxComponent>(TEXT("Body"));
-    Body->SetComponentTickEnabled(false);
-    Body->InitBoxExtent(FVector(110.0f, 110.0f, 110.0f));
-    Body->SetGenerateOverlapEvents(false);
-    Body->SetSimulatePhysics(true);
-    Body->SetLinearDamping(1.5f);
-    Body->SetAngularDamping(1.5f);
-    Body->SetCollisionProfileName(TEXT("ShipPartBody"));
-    Body->SetMassOverrideInKg(NAME_None, 250.f, true);
-    RootComponent = Body;*/
-
     GeometryCollection = CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollection"));
     GeometryCollection->SetComponentTickEnabled(false);
-    //GeometryCollection->SetupAttachment(RootComponent);
     GeometryCollection->SetGenerateOverlapEvents(false);
     GeometryCollection->SetSimulatePhysics(false);
     GeometryCollection->SetCollisionProfileName(TEXT("ShipPartMesh"));

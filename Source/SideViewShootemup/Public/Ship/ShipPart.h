@@ -25,13 +25,11 @@ public:
     UPROPERTY(EditAnywhere)
     TObjectPtr<UGeometryCollectionComponent> GeometryCollection;
 
-    //UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
-    //TObjectPtr<UBoxComponent> Body;
-    TObjectPtr<UPrimitiveComponent> Primitive; 
-
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Game)
     TObjectPtr<UHealthComponent> Health;
 
+    TObjectPtr<UPrimitiveComponent> Primitive;
+ 
     virtual void Interact(APlayerController* playerController) {}
 
     void BreakAndReweldShip();
