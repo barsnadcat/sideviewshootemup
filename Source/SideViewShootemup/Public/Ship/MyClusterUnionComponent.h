@@ -5,6 +5,7 @@
 
 #include "MyClusterUnionComponent.generated.h"
 
+struct FConstraintInstance;
 /**
  *
  */
@@ -14,4 +15,13 @@ class SIDEVIEWSHOOTEMUP_API UMyClusterUnionComponent : public UClusterUnionCompo
     GENERATED_BODY()
 public:
     virtual void AddForceAtLocation(FVector Force, FVector WorldLocation, FName BoneName) override;
+    virtual void OnCreatePhysicsState() override;
+
+private:
+    FTransform GetUnrealWorldTransform() const;
+    void CreateDOFLock();
+
+private:
+    FConstraintInstance* DOFConstraint = nullptr;
+
 };

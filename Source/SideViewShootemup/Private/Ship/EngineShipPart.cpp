@@ -32,6 +32,5 @@ void AEngineShipPart::OnUpdateThrust(const FVector& vector, double thrust, float
             auto Position = Axis->GetComponentLocation();
             ship->ClusterUnion->AddForceAtLocation(Force, Position, NAME_None);
         }
-        //GeometryCollection->AddForceAtLocation(Axis->GetComponentRotation().Vector() * thrust * MaxThrust, Axis->GetComponentLocation());
     }
 }
