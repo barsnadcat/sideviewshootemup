@@ -5,6 +5,7 @@
 #include "HealthComponent.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Ship/ShipPawn.h"
+#include "Ship/BridgeShipPart.h"
 #include "SideViewShootemup/SideViewShootemup.h"
 
 #include <map>
@@ -39,12 +40,17 @@ AShipPart::AShipPart()
 void AShipPart::BreakAndReweldShip()
 {
     SCOPED_NAMED_EVENT_TEXT("AShipPart::BreakAndReweldShip", FColor::Red);
-
-    if (AShipPart* weldRoot = GetWeldRoot())
+    AShipPawn* pawn = GetOwner<AShipPawn>();
+    if (!pawn)
     {
-        static uint8 connectedToWeldRoot = 0;
-        connectedToWeldRoot++;
-        weldRoot->ConnectedToWeldRoot = connectedToWeldRoot;
+        return;
+    }
+
+    if (AShipPart* bridge = pawn->GetBridge())
+    {
+        static uint8 connectedToBridge = 0;
+        connectedToBridge++;
+        bridge->ConnectedToBridge = connectedToBridge;
 
         Disconnect();
 
@@ -53,9 +59,9 @@ void AShipPart::BreakAndReweldShip()
             if (AShipPart* part = Connections[i].Get())
             {
                 TSet<AShipPart*> parts;
-                if (!IsConnectedToWeldRoot(part, weldRoot, parts))
+                if (!IsConnectedToBridge(part, bridge, parts))
                 {
-                    Reweld(parts);
+                    Reweld(parts, pawn);
                 }
             }
             Connections[i] = nullptr;
@@ -70,14 +76,14 @@ int32 AShipPart::Distance(AShipPart* a, AShipPart* b)
     return rowDistance * rowDistance + colDistance * colDistance;
 }
 
-bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<AShipPart*>& parts)
+bool AShipPart::IsConnectedToBridge(AShipPart* part, AShipPart* bridge, TSet<AShipPart*>& parts)
 {
     SCOPED_NAMED_EVENT_TEXT("AShipPart::IsConnectedToWeldRoot", FColor::Red);
     std::multimap<int32, AShipPart*> openSet;
     static uint8 seen = 0;
     seen++;
     part->Seen = seen;
-    openSet.insert(std::make_pair(Distance(part, root), part));
+    openSet.insert(std::make_pair(Distance(part, bridge), part));
     parts.Reserve(500);
 
     while (!openSet.empty())
@@ -89,16 +95,16 @@ bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<ASh
         openSet.erase(it);
 
         // Connected to the root check
-        if (current->ConnectedToWeldRoot == root->ConnectedToWeldRoot)
+        if (current->ConnectedToBridge == bridge->ConnectedToBridge)
         {
             // Caching path to the root
             for (auto& j : openSet)
             {
-                j.second->ConnectedToWeldRoot = root->ConnectedToWeldRoot;
+                j.second->ConnectedToBridge = bridge->ConnectedToBridge;
             }
             return true;
         }
-        current->ConnectedToWeldRoot = root->ConnectedToWeldRoot;
+        current->ConnectedToBridge = bridge->ConnectedToBridge;
 
         // Look around
         for (uint8 i = 0; i < CI_Size; i++)
@@ -108,7 +114,7 @@ bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<ASh
                 if (n->Seen != seen)
                 {
                     n->Seen = seen;
-                    openSet.insert(std::make_pair(Distance(n, root), n));
+                    openSet.insert(std::make_pair(Distance(n, bridge), n));
                 }
             }
         }
@@ -119,31 +125,12 @@ bool AShipPart::IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<ASh
     return false;
 }
 
-AShipPart* AShipPart::GetWeldRoot()
-{
-    FBodyInstance* bodyInstance = Primitive->GetBodyInstance();
-    check(bodyInstance);
-    UPrimitiveComponent* ownerComponent = bodyInstance->OwnerComponent.Get();
-    check(ownerComponent);
-    return ownerComponent->GetOwner<AShipPart>();
-}
-
-void AShipPart::Reweld(TSet<AShipPart*>& parts)
+void AShipPart::Reweld(TSet<AShipPart*>& parts, AShipPawn* pawn)
 {
     SCOPED_NAMED_EVENT_TEXT("AShipPart::Reweld", FColor::Red);
-    AShipPart* newRoot = nullptr;
     for (AShipPart* part : parts)
     {
-        if (!newRoot)
-        {
-            newRoot = part;
-            newRoot->Primitive->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-        }
-        else
-        {
-            part->Primitive->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-            part->Primitive->AttachToComponent(newRoot->Primitive, {EAttachmentRule::KeepWorld, true});
-        }
+        pawn->UnUnion(part);
     }
 }
 

@@ -32,6 +32,17 @@ void AShipPawn::Union(AShipPart* shipPart)
     shipPart->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 }
 
+void AShipPawn::UnUnion(AShipPart* shipPart)
+{
+    check(ClusterUnion);
+    check(shipPart);
+    check(shipPart->GeometryCollection);
+    ClusterUnion->RemoveComponentFromCluster(shipPart->GeometryCollection);
+    shipPart->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    shipPart->GeometryCollection->SetEnableDamageFromCollision(false);
+    shipPart->DisablePart();
+}
+
 void AShipPawn::ConstructShip()
 {
     check(ShipDesign);
@@ -69,18 +80,14 @@ void AShipPawn::ConstructShip()
         }
     }
 
-    // Weld parts
-    /*for (uint8 row = 0; row < parts.Num(); row++)
+    // Connect parts
+    for (uint8 row = 0; row < parts.Num(); row++)
     {
         auto& partsRow = parts[row];
         for (uint8 column = 0; column < partsRow.Num(); column++)
         {
             if (AShipPart* part = partsRow[column])
             {
-                if (part != Bridge)
-                {
-                    part->Body->AttachToComponent(Bridge->Body, {EAttachmentRule::KeepWorld, true});
-                }
                 if (column > 0)
                 {
                     AShipPart::ConnectHorizontally(partsRow[column - 1], part);
@@ -92,7 +99,7 @@ void AShipPawn::ConstructShip()
             }
         }
     }
-    UE_LOG(Game, Display, TEXT("Children %d"), Bridge->Body->GetAttachChildren().Num());*/
+    //UE_LOG(Game, Display, TEXT("Children %d"), Bridge->Body->GetAttachChildren().Num());
 }
 
 void AShipPawn::Tick(float DeltaTime)

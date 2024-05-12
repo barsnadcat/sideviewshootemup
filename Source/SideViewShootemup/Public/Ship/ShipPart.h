@@ -31,6 +31,7 @@ public:
     TObjectPtr<UPrimitiveComponent> Primitive;
  
     virtual void Interact(APlayerController* playerController) {}
+    virtual void DisablePart() { }
 
     void BreakAndReweldShip();
     void SetCoord(uint8 row, uint8 col)
@@ -42,13 +43,12 @@ public:
     static void ConnectVertically(AShipPart* top, AShipPart* bottom);
     static void ConnectHorizontally(AShipPart* left, AShipPart* right);
 
-private:
+protected:
     static int32 Distance(AShipPart* a, AShipPart* b);
-    static bool IsConnectedToWeldRoot(AShipPart* part, AShipPart* root, TSet<AShipPart*>& parts);
-    static void Reweld(TSet<AShipPart*>& parts);
+    static bool IsConnectedToBridge(AShipPart* part, AShipPart* bridge, TSet<AShipPart*>& parts);
+    static void Reweld(TSet<AShipPart*>& parts, AShipPawn* pawn);
 
     void Disconnect();
-    AShipPart* GetWeldRoot();
 
     enum EConnectionIndex : int
     {
@@ -60,7 +60,7 @@ private:
     };
 
     TArray<TWeakObjectPtr<AShipPart>> Connections;
-    uint8 ConnectedToWeldRoot = 0;
+    uint8 ConnectedToBridge = 0;
     uint8 Seen = 0;
     uint8 Row = 0;
     uint8 Column = 0;

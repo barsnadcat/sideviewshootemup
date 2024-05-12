@@ -16,6 +16,7 @@ class SIDEVIEWSHOOTEMUP_API AGunShipPart : public AShipPart
 public:
     AGunShipPart();
 
+
     UPROPERTY(EditDefaultsOnly, Category = Game)
     TSubclassOf<class AActor> ProjectileClass;
 
@@ -29,8 +30,11 @@ public:
     double RPM = 180.f;
 
 private:
+    virtual void DisablePart() override;
     virtual void PostActorCreated() override;
     void OnUpdateAimTarget(const FVector& target, float deltaTime);
     void OnShoot();
     double mLastShootSeconds = 0.0f;
+    FDelegateHandle OnUpdateAimTargetHandle;
+    FDelegateHandle OnShootHandle;
 };

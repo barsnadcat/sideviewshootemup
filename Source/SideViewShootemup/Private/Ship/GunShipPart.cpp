@@ -13,12 +13,22 @@ AGunShipPart::AGunShipPart()
     GunMuzzle->SetupAttachment(Axis);
 }
 
+void AGunShipPart::DisablePart()
+{
+    if (AShipPawn* ship = GetOwner<AShipPawn>())
+    {
+        ship->UpdateAimTarget.Remove(OnUpdateAimTargetHandle);
+        ship->Shoot.Remove(OnShootHandle);
+    }
+    //SetOwner(nullptr);
+}
+
 void AGunShipPart::PostActorCreated()
 {
     if (AShipPawn* ship = GetOwner<AShipPawn>())
     {
-        ship->UpdateAimTarget.AddUObject(this, &AGunShipPart::OnUpdateAimTarget);
-        ship->Shoot.AddUObject(this, &AGunShipPart::OnShoot);
+        OnUpdateAimTargetHandle = ship->UpdateAimTarget.AddUObject(this, &AGunShipPart::OnUpdateAimTarget);
+        OnShootHandle = ship->Shoot.AddUObject(this, &AGunShipPart::OnShoot);
     }
 }
 
