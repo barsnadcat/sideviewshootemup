@@ -39,7 +39,7 @@ void AShipPawn::UnUnion(AShipPart* shipPart)
     check(shipPart->GeometryCollection);
     ClusterUnion->RemoveComponentFromCluster(shipPart->GeometryCollection);
     shipPart->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-    shipPart->GeometryCollection->SetEnableDamageFromCollision(false);
+    //shipPart->GeometryCollection->SetEnableDamageFromCollision(false);
     shipPart->DisablePart();
 }
 
