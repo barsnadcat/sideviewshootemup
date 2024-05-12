@@ -23,6 +23,8 @@ public:
     TObjectPtr<UAxisComponent> Axis;
 
 private:
+    virtual void DisablePart() override;
     virtual void PostActorCreated() override;
     void OnUpdateThrust(const FVector& vector, double thrust, float deltaTime);
+    FDelegateHandle OnUpdateThrustHandle;
 };

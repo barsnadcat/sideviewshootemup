@@ -112,3 +112,7 @@ Looks like I need to extend ClusterUnionComponent
 
 Applying force to clusterunion particle handle did not work. Why?
 Ok, it actually kind of works, but looks like if ship lies on the ground, it will not wake up
+
+Connectivity graph  
+How did I miss UClusterUnionReplicatedProxyComponent????
+Huh, it gets added to actors by force!

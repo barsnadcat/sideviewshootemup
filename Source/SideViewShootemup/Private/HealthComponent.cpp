@@ -2,6 +2,8 @@
 
 #include "SideViewShootemup/SideViewShootemup.h"
 #include "Ship/ShipPart.h"
+#include "Ship/ShipPawn.h"
+#include "Components/BoxComponent.h"
 
 UHealthComponent::UHealthComponent()
 {
@@ -29,10 +31,16 @@ void UHealthComponent::HandleTakeAnyDamage(AActor* damagedActor, float damage, c
     {
         UE_LOG(Game, Display, TEXT("%s died"),
             damagedActor ? *damagedActor->GetFName().ToString() : TEXT("null"));
-        /*if (AShipPart* part = GetOwner<AShipPart>())
+        if (AShipPart* part = GetOwner<AShipPart>())
         {
+            if (AShipPawn* ship = part->GetOwner<AShipPawn>())
+            {
+                ship->UnUnion(part);
+            }
+            //part->Overlap->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
             part->BreakAndReweldShip();
-        }*/
+        }
         GetOwner()->Destroy();
     }
 }

@@ -35,12 +35,14 @@ public:
 public:
     virtual void BeginPlay() override;
     void Union(AShipPart* a);
+    void UnUnion(AShipPart* a);
     virtual void Tick(float DeltaTime) override;
 
     void SetAimPosition(const FVector& vector) { mAimPosition = vector; }
     void SetThrustVector(const FVector& vector) { mThrustVector = vector; }
     void SetThrust(float thrust) { mThrust = thrust; }
     void AutoPilot();
+    ABridgeShipPart* GetBridge() { return Bridge; }
 
 private:
     void ConstructShip();

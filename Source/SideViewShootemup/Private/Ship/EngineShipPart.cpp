@@ -13,11 +13,20 @@ AEngineShipPart::AEngineShipPart()
     Axis->SetupAttachment(RootComponent);
 }
 
+void AEngineShipPart::DisablePart()
+{
+    if (AShipPawn* ship = GetOwner<AShipPawn>())
+    {
+        ship->UpdateThrust.Remove(OnUpdateThrustHandle);
+    }
+    //SetOwner(nullptr);
+}
+
 void AEngineShipPart::PostActorCreated()
 {
     if (AShipPawn* ship = GetOwner<AShipPawn>())
     {
-        ship->UpdateThrust.AddUObject(this, &AEngineShipPart::OnUpdateThrust);
+        OnUpdateThrustHandle = ship->UpdateThrust.AddUObject(this, &AEngineShipPart::OnUpdateThrust);
     }
 }
 
