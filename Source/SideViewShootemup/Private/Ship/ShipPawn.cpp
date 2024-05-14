@@ -20,30 +20,32 @@ AShipPawn::AShipPawn()
 void AShipPawn::BeginPlay()
 {
     Super::BeginPlay();
-    ConstructShip();
-    AutoPilot();
+    if (ShipDesign)
+    {
+        ConstructShip(ShipDesign);
+        AutoPilot();
+    }
 }
 
 void AShipPawn::Union(AShipPart* shipPart)
 {
+    SCOPED_NAMED_EVENT_TEXT("AShipPawn::Union", FColor::Red);
     ClusterUnion->AddComponentToCluster(shipPart->GeometryCollection, {});
-    shipPart->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 }
 
 void AShipPawn::UnUnion(AShipPart* shipPart)
 {
+    SCOPED_NAMED_EVENT_TEXT("AShipPawn::UnUnion", FColor::Red);
     check(ClusterUnion);
     check(shipPart);
     check(shipPart->GeometryCollection);
     ClusterUnion->RemoveComponentFromCluster(shipPart->GeometryCollection);
-    shipPart->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-    //shipPart->GeometryCollection->SetEnableDamageFromCollision(false);
     shipPart->DisablePart();
 }
 
-void AShipPawn::ConstructShip()
+void AShipPawn::ConstructShip(UShipDesign* design)
 {
-    check(ShipDesign);
+    check(design);
     UWorld* world = GetWorld();
     check(world);
 
@@ -53,10 +55,10 @@ void AShipPawn::ConstructShip()
     spawnParams.Owner = this;
 
     TArray<TArray<AShipPart*>> parts;
-    parts.SetNum(ShipDesign->X.Num());
-    for (uint8 row = 0; row < ShipDesign->X.Num(); row++)
+    parts.SetNum(design->X.Num());
+    for (uint8 row = 0; row < design->X.Num(); row++)
     {
-        const auto& designRow = ShipDesign->X[row].Y;
+        const auto& designRow = design->X[row].Y;
         auto& partsRow = parts[row];
         partsRow.SetNum(designRow.Num());
 
@@ -65,7 +67,7 @@ void AShipPawn::ConstructShip()
             TSubclassOf<AShipPart> partClass = designRow[column];
             if (partClass)
             {
-                FVector partPos = GetActorLocation() + FVector(column * ShipDesign->GridSize, 0.f, row * -ShipDesign->GridSize);
+                FVector partPos = GetActorLocation() + FVector(column * design->GridSize, 0.f, row * -design->GridSize);
                 AShipPart* newPart = world->SpawnActor<AShipPart>(partClass, partPos, FRotator::ZeroRotator, spawnParams);
                 newPart->SetCoord(row, column);
                 if (ABridgeShipPart* bridgePart = Cast<ABridgeShipPart>(newPart))
@@ -116,5 +118,18 @@ void AShipPawn::AutoPilot()
     if (IsValid(Bridge))
     {
         Bridge->GetAutoPilot()->Possess(this);
+    }
+}
+
+void AShipPawn::ConstructShip(TSet<AShipPart*>& parts)
+{
+    SCOPED_NAMED_EVENT_TEXT("AShipPawn::ConstructShip", FColor::Red);
+    for (AShipPart* part : parts)
+    {
+        if (!Bridge)
+        {
+            Bridge = part;
+        }
+        Union(part);
     }
 }

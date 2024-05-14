@@ -7,6 +7,7 @@
 #include "Ship/ShipPawn.h"
 #include "Ship/BridgeShipPart.h"
 #include "SideViewShootemup/SideViewShootemup.h"
+#include "MyGameMode.h"
 
 #include <map>
 
@@ -125,12 +126,36 @@ bool AShipPart::IsConnectedToBridge(AShipPart* part, AShipPart* bridge, TSet<ASh
     return false;
 }
 
-void AShipPart::Reweld(TSet<AShipPart*>& parts, AShipPawn* pawn)
+void AShipPart::Reweld(TSet<AShipPart*>& parts, AShipPawn* oldShip)
 {
-    SCOPED_NAMED_EVENT_TEXT("AShipPart::Reweld", FColor::Red);
-    for (AShipPart* part : parts)
+    
+    FVector worldLocation = FVector::Zero();
     {
-        pawn->UnUnion(part);
+        SCOPED_NAMED_EVENT_TEXT("AShipPart::Reweld::UnUnion", FColor::Red);
+        for (AShipPart* part : parts)
+        {
+            if (worldLocation.IsZero())
+            {
+                worldLocation = part->GetActorLocation();
+            }
+            oldShip->UnUnion(part);
+        }
+    }
+
+    if (parts.Num() < 2)
+    {
+        return;
+    }
+
+    {
+        SCOPED_NAMED_EVENT_TEXT("AShipPart::Reweld::Spawn", FColor::Red);
+        FActorSpawnParameters SpawnInfo;
+        SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        SpawnInfo.ObjectFlags |= RF_Transient;
+        if (AShipPawn* newShip = GetWorld()->SpawnActor<AShipPawn>(AShipPawn::StaticClass(), worldLocation, FRotator::ZeroRotator, SpawnInfo))
+        {
+            newShip->ConstructShip(parts);
+        }
     }
 }
 
