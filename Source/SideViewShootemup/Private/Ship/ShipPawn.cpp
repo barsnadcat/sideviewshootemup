@@ -13,10 +13,8 @@
 AShipPawn::AShipPawn()
 {
     PrimaryActorTick.bCanEverTick = true;
-    //RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
     ClusterUnion = CreateDefaultSubobject<UMyClusterUnionComponent>(TEXT("ClusterUnion"));
     RootComponent = ClusterUnion;
-    //ClusterUnion->SetupAttachment(RootComponent);
 }
 
 void AShipPawn::BeginPlay()
