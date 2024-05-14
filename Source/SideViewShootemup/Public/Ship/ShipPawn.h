@@ -42,12 +42,12 @@ public:
     void SetThrustVector(const FVector& vector) { mThrustVector = vector; }
     void SetThrust(float thrust) { mThrust = thrust; }
     void AutoPilot();
-    ABridgeShipPart* GetBridge() { return Bridge; }
+    AShipPart* GetBridge() { return Bridge; }
 
 private:
     void ConstructShip();
 
-    TObjectPtr<ABridgeShipPart> Bridge;
+    TObjectPtr<AShipPart> Bridge;
 
     FVector mThrustVector = FVector::UnitZ();
     FVector mAimPosition = FVector::UnitX();

@@ -25,7 +25,7 @@ public:
     TObjectPtr<UPhysicsConstraintComponent> PawnConstraint;
 
     virtual void Interact(APlayerController* playerController) override;
-    AShipAIController* GetAutoPilot() { return ShipAutoPilot; }
+    virtual AShipAIController* GetAutoPilot() override { return ShipAutoPilot; }
 
 private:
     virtual void BeginPlay() override;

@@ -10,6 +10,7 @@ class APlayerController;
 class UGeometryCollectionComponent;
 class UHealthComponent;
 class UBoxComponent;
+class AShipAIController;
 
 UCLASS()
 class SIDEVIEWSHOOTEMUP_API AShipPart : public AActor
@@ -31,6 +32,8 @@ public:
     TObjectPtr<UPrimitiveComponent> Primitive;
  
     virtual void Interact(APlayerController* playerController) {}
+    virtual AShipAIController* GetAutoPilot() { return nullptr; }
+
     virtual void DisablePart() { }
 
     void BreakAndReweldShip();
