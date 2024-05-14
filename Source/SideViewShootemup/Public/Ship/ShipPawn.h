@@ -43,9 +43,10 @@ public:
     void SetThrust(float thrust) { mThrust = thrust; }
     void AutoPilot();
     AShipPart* GetBridge() { return Bridge; }
+    void ConstructShip(TSet<AShipPart*>& parts);
 
 private:
-    void ConstructShip();
+    void ConstructShip(UShipDesign* design);
 
     TObjectPtr<AShipPart> Bridge;
 

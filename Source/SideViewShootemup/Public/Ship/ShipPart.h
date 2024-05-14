@@ -49,7 +49,7 @@ public:
 protected:
     static int32 Distance(AShipPart* a, AShipPart* b);
     static bool IsConnectedToBridge(AShipPart* part, AShipPart* bridge, TSet<AShipPart*>& parts);
-    static void Reweld(TSet<AShipPart*>& parts, AShipPawn* pawn);
+    void Reweld(TSet<AShipPart*>& parts, AShipPawn* pawn);
 
     void Disconnect();
 
