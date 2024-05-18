@@ -116,3 +116,74 @@ Ok, it actually kind of works, but looks like if ship lies on the ground, it wil
 Connectivity graph  
 How did I miss UClusterUnionReplicatedProxyComponent????
 Huh, it gets added to actors by force!
+
+Well if we just remove geometry collections from cluster union, and then create new one = we hit same 300 ms spike in UpdateAllClusterUnionProperties!
+Shit.
+
+But, it looks like that clust union can be connected to another cluster union.
+Well there is then bCheckConnectivity flag
+HandleConnectivityOnReleaseClusterParticle
+
+What if cluster union is actuall supposed to work similar to constraint? I.e. each cluster union is a link?
+2 unions 3 geom collections - does not work, only 2 got linked.
+but union of unions? Sort of yes, and no. Crashes asserts etc.
+		// AddReleased is the original behavior where if the particle to be added is a cluster, we will release the cluster first
+		// and add its children instead.
+		AddReleased, == may be cluster - is cluster union? Not geometry collection?
+
+Maybe we can steal parts? Huh. Actuall you can! And it still spikes, but less ~180ms
+
+
+
+That is what spiking:
+1 call
+TPBDRigidClustering<>::UnionClusterGroups
+  FClusterUnionManager::FlushPendingOperations
+    FClusterUnionManager::HandleDeferredClusterUnionUpdateProperties
+      FClusterUnionManager::DeferredClusterUnionUpdate
+        FClusterUnionManager::UpdateClusterUnionProperties
+34 calls
+      void GenerateConnectionGraph(FRigidClustering& Clustering, FClusterUnion& ClusterUnion)
+        AddParticleToConnectionGraph
+        GenerateConnectionGraph
+			TPBDRigidClustering<>::GenerateConnectionGraph -- this is 
+			... g<> :: UpdateConnectivityGraphUsingDelaunay TriangulationWithBoundsOverlaps
+			
+Question is: what for do you build ConnectionGraph? Hmm, it may be a graph for fracturing and not for union
+What is that graph? 
+Can you debug drawn it?
+		// Connectivity Graph
+		//    Build a connectivity graph for the cluster. If the EConnectionMethod::PointImplicit is specified
+		//    and the ClusterIndex has collision particles then use the expensive connection
+		//    method. Otherwise try the DelaunayTriangulation (subdivides convex hull into triangles)if not none.
+		//
+RemoveClusterUnionEdges -> that is specific to ClusterUnion - that is what we need to dig in!
+		bool bChaosClusterUnionGenerateInterclusterEdges = true;
+		FAutoConsoleVariableRef CVarChaosClusterUnionGenerateInterclusterEdges(
+			TEXT("p.Chaos.ClusterUnion.GenerateInterclusterEdges"),
+			bChaosClusterUnionGenerateInterclusterEdges,
+			TEXT("Whether to generate intercluster edges automatically when adding to a cluster union (and remove them when removing from the cluster union).")
+		);
+
+
+To investigate:
+    Huh, there is a api AddConnectivityEdgesBetween hmm
+	
+	enum class EClusterUnionOperation
+	{
+		Add,
+		// AddReleased is the original behavior where if the particle to be added is a cluster, we will release the cluster first
+		// and add its children instead.
+		AddReleased,
+		Remove,
+		UpdateChildToParent -- what is that? <- UClusterUnionComponent::ForceSetChildToParent <- UClusterUnionComponent::AddComponentToCluster
+	};
+	
+	    // We need to keep track of all the particles we touched here. We need this because UpdateClusterUnionParticlesChildToParent
+		// is an *authoritative* update on the ChildToParent of the particle. However, UpdateAllClusterUnionProperties in certain cases
+		// may try to recompute the ChildToParent using the position of the particle. To counteract this, we will force the ChildToParent
+		// to be *temporarily* locked for the duration of the *next* UpdateAllClusterUnionProperties. However, unless bLock is true, we will restore the
+		// lock state of the particle to what it was previously.
+		
+		
+WICTORY! bChaosClusterUnionGenerateInterclusterEdges = false, reduces spike to unnoticable 16 ms!!!
