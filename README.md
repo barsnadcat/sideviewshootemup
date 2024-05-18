@@ -62,6 +62,18 @@ Bad:
 
 ## Lego fortnite approach
 Use FClusterUnion and FGeometryCollection.
+Use ClusterUnionComponent to join parts of the ship represented by GeometryCollection components.
+On ship break - create a new cluster union with separted parts.
+
+Really nice:
+* Very cheap simulation
+
+Nice:
+* Ship is 100% rigid
+* We can make use of fragmentation for cooler destruction
+
+Bad:
+* Engine support is basic - I had to implement plane restriction and force application interfaces
 
 - FClusterUnionManager
   - FClusterUnionPhysicsProxy
