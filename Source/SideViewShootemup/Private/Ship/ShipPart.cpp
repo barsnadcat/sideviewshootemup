@@ -129,25 +129,19 @@ bool AShipPart::IsConnectedToBridge(AShipPart* part, AShipPart* bridge, TSet<ASh
 void AShipPart::Reweld(TSet<AShipPart*>& parts, AShipPawn* oldShip)
 {
     
-    FVector worldLocation = FVector::Zero();
+
+    if (parts.Num() < 2)
     {
         SCOPED_NAMED_EVENT_TEXT("AShipPart::Reweld::UnUnion", FColor::Red);
         for (AShipPart* part : parts)
         {
-            if (worldLocation.IsZero())
-            {
-                worldLocation = part->GetActorLocation();
-            }
             oldShip->UnUnion(part);
         }
     }
-
-    if (parts.Num() < 2)
+    else
     {
-        return;
-    }
-
-    {
+        auto it = parts.begin();  
+        FVector worldLocation = (*it)->GetActorLocation();
         SCOPED_NAMED_EVENT_TEXT("AShipPart::Reweld::Spawn", FColor::Red);
         FActorSpawnParameters SpawnInfo;
         SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;

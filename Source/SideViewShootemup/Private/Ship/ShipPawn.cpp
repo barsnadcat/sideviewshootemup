@@ -126,6 +126,8 @@ void AShipPawn::ConstructShip(TSet<AShipPart*>& parts)
     SCOPED_NAMED_EVENT_TEXT("AShipPawn::ConstructShip", FColor::Red);
     for (AShipPart* part : parts)
     {
+        part->DisablePart();
+
         if (!Bridge)
         {
             Bridge = part;
