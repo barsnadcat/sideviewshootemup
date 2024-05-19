@@ -17,14 +17,18 @@ void UMyClusterUnionComponent::AddForceAtLocation(FVector force, FVector worldLo
     {
         return;
     }
+    float etherLinearDrag = 1.5f; 
+    float etherAngularDrag = 1.5f;
 
     solver->EnqueueCommandImmediate(
-        [solver, particleHandle, force, worldLocation]()
+        [solver, particleHandle, force, worldLocation, etherLinearDrag, etherAngularDrag]()
         {
             const Chaos::FVec3 worldCOM = Chaos::FParticleUtilitiesXR::GetCoMWorldPosition(particleHandle);
             const Chaos::FVec3 worldTorque = Chaos::FVec3::CrossProduct(worldLocation - worldCOM, force);
             particleHandle->AddForce(force);
             particleHandle->AddTorque(worldTorque);
+            particleHandle->SetLinearEtherDrag(etherLinearDrag);
+            particleHandle->SetAngularEtherDrag(etherAngularDrag);
             solver->GetEvolution()->WakeParticle(particleHandle);
         });
 }
