@@ -60,8 +60,8 @@ Not tested yet, performance fix is not given.
 Bad:
 * Extra maintenance cost associated with engine modification.
 
-## Lego fortnite approach
-Use FClusterUnion and FGeometryCollection.
+## Use FClusterUnion and FGeometryCollection
+
 Use ClusterUnionComponent to join parts of the ship represented by GeometryCollection components.
 On ship break - create a new cluster union with separted parts.
 
@@ -74,10 +74,9 @@ Nice:
 
 Bad:
 * Engine support is basic - I had to implement plane restriction and force application interfaces
+* For no spikes you need to set bChaosClusterUnionGenerateInterclusterEdges = false, wich is not default state, and may dissapear in future.
 
-- FClusterUnionManager
-  - FClusterUnionPhysicsProxy
-    - UClusterUnionComponent (5.3)
-      - AClusterUnionActor 
-      - ChaosModularVehicle (5.4)
+### Use connectivity graph of FClusterUnion and FGeometryCollection
+
+That I suspect what lego fortnite does. Instead of removing elements from cluster union, you breake cluster.
         
