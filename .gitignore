@@ -1,6 +1,9 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# VS Code
+.vscode
+
 # Compiled Object files
 *.slo
 *.lo
@@ -35,6 +38,7 @@
 *.xcodeproj
 *.xcworkspace
 *.sln
+*.code-workspace
 *.suo
 *.opensdf
 *.sdf
@@ -72,3 +76,4 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
