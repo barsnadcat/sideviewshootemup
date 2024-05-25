@@ -17,7 +17,7 @@ void UPhysCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevel
     if (!Acceleration.IsNearlyZero())
     {
         UpdatedPrimitive->AddForce(Acceleration, NAME_None, true);
-        //UpdatetOrientation(Acceleration);
+        UpdatetOrientation(Acceleration);
     }
 }
 

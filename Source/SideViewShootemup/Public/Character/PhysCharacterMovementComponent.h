@@ -14,7 +14,7 @@ class SIDEVIEWSHOOTEMUP_API UPhysCharacterMovementComponent : public UPawnMoveme
     GENERATED_BODY()
 public:
     virtual void SetUpdatedComponent(USceneComponent* NewUpdatedComponent) override;
-    void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction);
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     UFUNCTION()
     void OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

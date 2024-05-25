@@ -28,7 +28,7 @@ APhysCharacterPawn::APhysCharacterPawn(const FObjectInitializer& ObjectInitializ
     // Ask the Controller for the full rotation if desired (ie for aiming).
     bUseControllerRotationPitch = false;
     bUseControllerRotationRoll = false;
-    bUseControllerRotationYaw = true;
+    bUseControllerRotationYaw = false;
 
     CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
     CapsuleComponent->InitCapsuleSize(34.0f, 88.0f);
