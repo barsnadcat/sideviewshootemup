@@ -187,3 +187,7 @@ To investigate:
 		
 		
 WICTORY! bChaosClusterUnionGenerateInterclusterEdges = false, reduces spike to unnoticable 16 ms!!!
+
+
+Fields??
+Create a cluster union and use a field to applay strain to it? Did not work. But regardless. Breaking geometry collection in the middle of the cluster do not fracture cluster itsefl.
